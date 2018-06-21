@@ -1,3 +1,4 @@
 easy_admin:
     entities:
         - App\Entity\Device
+        - App\Entity\User
