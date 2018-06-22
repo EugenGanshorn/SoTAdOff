@@ -1,4 +1,8 @@
 easy_admin:
+    list:
+        actions: ['show']
     entities:
-        - App\Entity\Device
-        - App\Entity\User
+        Device:
+            class: App\Entity\Device
+        User:
+            class: App\Entity\User

@@ -50,11 +50,59 @@ class AppGetTasmotaStatusCommand extends ContainerAwareCommand
 
         $entityManager = $this->getContainer()->get('doctrine')->getEntityManager();
         foreach ($this->deviceRespository->findAll() as $device) {
-            $url = $this->request->getUrl();
-            $url->setIpAddress($device->getIpAddress());
-            $this->request->setUrl($url);
+            $this->request->getUrl()->setIpAddress($device->getIpAddress());
 
-            $device->setStatus(json_encode($this->request->Status(0)));
+            $status = $this->request->Status(0);
+
+            $status['Status']['FriendlyName'] = implode(' ', $status['Status']['FriendlyName']);
+
+            $config = [
+                'Status' => [
+                    'methodNamePrefix' => '',
+                    'data' => &$status['Status'],
+                ],
+                'StatusFWR' => [
+                    'methodNamePrefix' => 'Fwr',
+                    'data' => &$status['StatusFWR'],
+                ],
+                'StatusPRM' => [
+                    'methodNamePrefix' => 'Prm',
+                    'data' => &$status['StatusPRM'],
+                ],
+                'StatusLOG' => [
+                    'methodNamePrefix' => 'Log',
+                    'data' => &$status['StatusLOG'],
+                ],
+                'StatusNET' => [
+                    'methodNamePrefix' => 'Net',
+                    'data' => &$status['StatusNET'],
+                ],
+                'StatusMQT' => [
+                    'methodNamePrefix' => '',
+                    'data' => &$status['StatusMQT'],
+                ],
+                'StatusSTS' => [
+                    'methodNamePrefix' => 'Sts',
+                    'data' => &$status['StatusSTS'],
+                ],
+                'StatusSTSWifi' => [
+                    'methodNamePrefix' => 'Wifi',
+                    'data' => &$status['StatusSTS']['Wifi'],
+                ],
+            ];
+
+            foreach ($config as $statusConfig) {
+                foreach ($statusConfig['data'] as $name => $value) {
+                    if (!is_scalar($value)) {
+                        continue;
+                    }
+
+                    $methodName = sprintf('set%s%s', $statusConfig['methodNamePrefix'], $name);
+                    if (method_exists($device, $methodName)) {
+                        $device->$methodName($value);
+                    }
+                }
+            }
 
             $entityManager->persist($device);
         }
