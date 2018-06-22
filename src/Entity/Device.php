@@ -41,6 +41,11 @@ class Device
      */
     private $position;
 
+    /**
+     * @ORM\Column(type="string", length=65535, nullable=true)
+     */
+    private $status;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -102,6 +107,18 @@ class Device
     public function setPosition(int $position): self
     {
         $this->position = $position;
+
+        return $this;
+    }
+
+    public function getStatus(): ?string
+    {
+        return $this->status;
+    }
+
+    public function setStatus(?string $status): self
+    {
+        $this->status = $status;
 
         return $this;
     }
