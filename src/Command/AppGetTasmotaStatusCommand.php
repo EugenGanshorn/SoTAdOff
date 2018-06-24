@@ -123,6 +123,7 @@ class AppGetTasmotaStatusCommand extends ContainerAwareCommand
     public function setUrl(Url $url): AppGetTasmotaStatusCommand
     {
         $this->url = $url;
+
         return $this;
     }
 
@@ -136,6 +137,7 @@ class AppGetTasmotaStatusCommand extends ContainerAwareCommand
     public function setRequest(Request $request): AppGetTasmotaStatusCommand
     {
         $this->request = $request;
+
         return $this;
     }
 
@@ -149,6 +151,7 @@ class AppGetTasmotaStatusCommand extends ContainerAwareCommand
     public function setClient(Client $client): AppGetTasmotaStatusCommand
     {
         $this->client = $client;
+
         return $this;
     }
 
@@ -162,6 +165,7 @@ class AppGetTasmotaStatusCommand extends ContainerAwareCommand
     public function setDeviceRespository(DeviceRepository $deviceRespository): AppGetTasmotaStatusCommand
     {
         $this->deviceRespository = $deviceRespository;
+
         return $this;
     }
 }

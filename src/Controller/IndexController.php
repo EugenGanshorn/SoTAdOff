@@ -3,7 +3,6 @@
 namespace App\Controller;
 
 use App\Repository\DeviceRepository;
-use Doctrine\Bundle\DoctrineBundle\DoctrineBundle;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
 use GuzzleHttp\Client;
@@ -44,6 +43,7 @@ class IndexController extends Controller
     public function index()
     {
         $devices = $this->deviceRespository->findAll();
+
         return $this->render('index/index.html.twig', [
             'devices' => $devices,
         ]);
@@ -52,6 +52,7 @@ class IndexController extends Controller
     /**
      * @Route("/{id}", requirements={"id" = "\d+"}, name="toggle")
      * @Method({"GET"})
+     *
      * @param EntityManagerInterface $entityManager
      * @param int                    $id
      *
@@ -86,6 +87,7 @@ class IndexController extends Controller
     public function setDeviceRespository(DeviceRepository $deviceRespository): IndexController
     {
         $this->deviceRespository = $deviceRespository;
+
         return $this;
     }
 
@@ -99,6 +101,7 @@ class IndexController extends Controller
     public function setClient(Client $client): IndexController
     {
         $this->client = $client;
+
         return $this;
     }
 
@@ -112,6 +115,7 @@ class IndexController extends Controller
     public function setRequest(Request $request): IndexController
     {
         $this->request = $request;
+
         return $this;
     }
 
@@ -125,6 +129,7 @@ class IndexController extends Controller
     public function setUrl(Url $url): IndexController
     {
         $this->url = $url;
+
         return $this;
     }
 }

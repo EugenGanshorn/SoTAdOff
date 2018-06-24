@@ -2,6 +2,12 @@
     "alterphp/easyadmin-extension-bundle": {
         "version": "v1.2.5"
     },
+    "composer/semver": {
+        "version": "1.4.2"
+    },
+    "composer/xdebug-handler": {
+        "version": "1.1.0"
+    },
     "doctrine/annotations": {
         "version": "1.0",
         "recipe": {
@@ -74,6 +80,15 @@
     "eugenganshorn/tasmota-http-client": {
         "version": "dev-master"
     },
+    "friendsofphp/php-cs-fixer": {
+        "version": "2.2",
+        "recipe": {
+            "repo": "github.com/symfony/recipes",
+            "branch": "master",
+            "version": "2.2",
+            "ref": "81dee417d2cc60cd1c9d6208dff2ec22a1103e93"
+        }
+    },
     "friendsofsymfony/user-bundle": {
         "version": "v2.1.2"
     },
@@ -103,6 +118,9 @@
     },
     "paragonie/random_compat": {
         "version": "v2.0.15"
+    },
+    "php-cs-fixer/diff": {
+        "version": "v1.3.0"
     },
     "psr/cache": {
         "version": "1.0.1"
@@ -224,6 +242,9 @@
     "symfony/polyfill-mbstring": {
         "version": "v1.8.0"
     },
+    "symfony/polyfill-php72": {
+        "version": "v1.8.0"
+    },
     "symfony/process": {
         "version": "v4.1.0"
     },
@@ -250,6 +271,9 @@
             "version": "3.3",
             "ref": "f8a63faa0d9521526499c0a8f403c9964ecb0527"
         }
+    },
+    "symfony/stopwatch": {
+        "version": "v4.1.0"
     },
     "symfony/swiftmailer-bundle": {
         "version": "2.5",
