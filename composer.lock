@@ -1168,12 +1168,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/EugenGanshorn/TasmotaHttpClient.git",
-                "reference": "795169c04fd66f46fe71230674b65368fa98ed2a"
+                "reference": "73eeab9ec6d12c056b625646a9c42c32e392fd02"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/EugenGanshorn/TasmotaHttpClient/zipball/795169c04fd66f46fe71230674b65368fa98ed2a",
-                "reference": "795169c04fd66f46fe71230674b65368fa98ed2a",
+                "url": "https://api.github.com/repos/EugenGanshorn/TasmotaHttpClient/zipball/73eeab9ec6d12c056b625646a9c42c32e392fd02",
+                "reference": "73eeab9ec6d12c056b625646a9c42c32e392fd02",
                 "shasum": ""
             },
             "require": {
@@ -1198,7 +1198,7 @@
                     "email": "eugen@ganshorn.eu"
                 }
             ],
-            "time": "2018-06-22T18:24:18+00:00"
+            "time": "2018-06-24T19:11:33+00:00"
         },
         {
             "name": "friendsofsymfony/user-bundle",

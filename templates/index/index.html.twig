@@ -11,10 +11,10 @@
     <ul class="list-inline d-flex flex-row">
     {% for device in devices %}
         <li class="p-2">
-            <button type="button" class="btn btn-outline-primary btn-lg">
+            <a href="/{{ device.id }}" role="button" class="btn btn{% if device.power == 0 %}-outline{% endif %}-primary btn-lg">
                 <span class="far fa-lightbulb"></span>
                 {{ device.name }}
-            </button>
+            </a>
         </li>
     {% endfor %}
     </ul>
