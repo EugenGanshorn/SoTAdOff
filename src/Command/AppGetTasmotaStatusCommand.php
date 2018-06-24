@@ -1,13 +1,12 @@
-<?php /** @noinspection ALL */
+<?php
 
 namespace App\Command;
 
 use App\Repository\DeviceRepository;
+use Doctrine\Bundle\DoctrineBundle\Registry;
 use GuzzleHttp\Client;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
-use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 use TasmotaHttpClient\Request;
@@ -48,7 +47,9 @@ class AppGetTasmotaStatusCommand extends ContainerAwareCommand
     {
         $io = new SymfonyStyle($input, $output);
 
-        $entityManager = $this->getContainer()->get('doctrine')->getEntityManager();
+        /** @var Registry $doctrine */
+        $doctrine = $this->getContainer()->get('doctrine');
+        $entityManager = $doctrine->getManager();
         foreach ($this->deviceRespository->findAll() as $device) {
             $this->request->getUrl()->setIpAddress($device->getIpAddress());
 
