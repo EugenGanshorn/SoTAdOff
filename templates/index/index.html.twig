@@ -8,10 +8,14 @@
 {% endblock %}
 
 {% block body %}
+    <ul class="list-inline d-flex flex-row">
     {% for device in devices %}
-        <button type="button" class="btn btn-outline-primary btn-lg">
-            <span class="far fa-lightbulb"></span>
-            {{ device.name }}
-        </button>
+        <li class="p-2">
+            <button type="button" class="btn btn-outline-primary btn-lg">
+                <span class="far fa-lightbulb"></span>
+                {{ device.name }}
+            </button>
+        </li>
     {% endfor %}
+    </ul>
 {% endblock %}
