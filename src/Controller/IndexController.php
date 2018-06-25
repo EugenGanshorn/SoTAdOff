@@ -3,14 +3,12 @@
 namespace App\Controller;
 
 use App\Repository\DeviceRepository;
+use App\Utils\DeviceHelper;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
-use GuzzleHttp\Client;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use TasmotaHttpClient\Request;
-use TasmotaHttpClient\Url;
 
 /**
  * @Route("/")
@@ -18,19 +16,9 @@ use TasmotaHttpClient\Url;
 class IndexController extends Controller
 {
     /**
-     * @var Client
+     * @var DeviceHelper
      */
-    protected $client;
-
-    /**
-     * @var Request
-     */
-    protected $request;
-
-    /**
-     * @var Url
-     */
-    protected $url;
+    protected $deviceHelper;
 
     /**
      * @var DeviceRepository
@@ -63,15 +51,10 @@ class IndexController extends Controller
         $device = $this->deviceRespository->find($id);
 
         if (null !== $device) {
-            $this->request->getUrl()->setIpAddress($device->getIpAddress());
-
-            $this->request->Power(2);
-
-            $status = $this->request->Status(0);
-            $device->setPower($status['Status']['Power']);
-
-            $entityManager->persist($device);
-            $entityManager->flush();
+            $this->deviceHelper
+                ->setDevice($device)
+                ->toogle()
+            ;
         }
 
         return $this->redirectToRoute('index');
@@ -94,41 +77,13 @@ class IndexController extends Controller
     /**
      * @required
      *
-     * @param Client $client
+     * @param DeviceHelper $deviceHelper
      *
      * @return IndexController
      */
-    public function setClient(Client $client): IndexController
+    public function setDeviceHelper(DeviceHelper $deviceHelper): IndexController
     {
-        $this->client = $client;
-
-        return $this;
-    }
-
-    /**
-     * @required
-     *
-     * @param Request $request
-     *
-     * @return IndexController
-     */
-    public function setRequest(Request $request): IndexController
-    {
-        $this->request = $request;
-
-        return $this;
-    }
-
-    /**
-     * @required
-     *
-     * @param Url $url
-     *
-     * @return IndexController
-     */
-    public function setUrl(Url $url): IndexController
-    {
-        $this->url = $url;
+        $this->deviceHelper = $deviceHelper;
 
         return $this;
     }
