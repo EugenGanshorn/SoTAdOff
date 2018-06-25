@@ -43,51 +43,15 @@ class DeviceHelper
 
     public function persistStatus(array $status): void
     {
-        $config = [
-            'Status' => [
-                'methodNamePrefix' => '',
-                'data' => &$status['Status'],
-            ],
-            'StatusFWR' => [
-                'methodNamePrefix' => 'Fwr',
-                'data' => &$status['StatusFWR'],
-            ],
-            'StatusPRM' => [
-                'methodNamePrefix' => 'Prm',
-                'data' => &$status['StatusPRM'],
-            ],
-            'StatusLOG' => [
-                'methodNamePrefix' => 'Log',
-                'data' => &$status['StatusLOG'],
-            ],
-            'StatusNET' => [
-                'methodNamePrefix' => 'Net',
-                'data' => &$status['StatusNET'],
-            ],
-            'StatusMQT' => [
-                'methodNamePrefix' => '',
-                'data' => &$status['StatusMQT'],
-            ],
-            'StatusSTS' => [
-                'methodNamePrefix' => 'Sts',
-                'data' => &$status['StatusSTS'],
-            ],
-            'StatusSTSWifi' => [
-                'methodNamePrefix' => 'Wifi',
-                'data' => &$status['StatusSTS']['Wifi'],
-            ],
-        ];
+        $parsedStatus = $this->parseStatus($status);
+        foreach ($parsedStatus as $name => $value) {
+            if (!is_scalar($value)) {
+                continue;
+            }
 
-        foreach ($config as $statusConfig) {
-            foreach ($statusConfig['data'] as $name => $value) {
-                if (!is_scalar($value)) {
-                    continue;
-                }
-
-                $methodName = sprintf('set%s%s', $statusConfig['methodNamePrefix'], $name);
-                if (method_exists($this->device, $methodName)) {
-                    $this->device->$methodName($value);
-                }
+            $methodName = sprintf('set%s', $name);
+            if (method_exists($this->device, $methodName)) {
+                $this->device->$methodName($value);
             }
         }
 
@@ -97,22 +61,14 @@ class DeviceHelper
 
     public function getStatus(): array
     {
-        $this->request->getUrl()->setIpAddress($this->device->getIpAddress());
-
-        $status = $this->request->Status(0);
-
-        // convert friendly name to string
-        $status['Status']['FriendlyName'] = implode(' ', $status['Status']['FriendlyName']);
-
-        return $status;
+        $this->prepareRequest();
+        return $this->request->Status(0);
     }
 
     public function toggle(): void
     {
-        $this->request->getUrl()->setIpAddress($this->device->getIpAddress());
-
+        $this->prepareRequest();
         $this->request->Power(2);
-
         $this->updateStatus();
     }
 
@@ -182,5 +138,47 @@ class DeviceHelper
         $this->entityManager = $entityManager;
 
         return $this;
+    }
+
+    /**
+     * @param array  $inputArray
+     * @param string $prefix
+     *
+     * @return array
+     */
+    protected function prefixArrayKeys(array $inputArray, string $prefix): array
+    {
+        return array_combine(
+            preg_filter('/^/', $prefix, array_keys($inputArray)),
+            array_values($inputArray)
+        );
+    }
+
+    /**
+     * @param array $status
+     *
+     * @return array
+     */
+    protected function parseStatus(array $status): array
+    {
+        // convert friendly name to string
+        $status['Status']['FriendlyName'] = implode(' ', $status['Status']['FriendlyName']);
+
+        $parsedStatus = [];
+        $parsedStatus = array_merge($parsedStatus, $this->prefixArrayKeys($status['StatusSTS']['Wifi'], 'Wifi'));
+        $parsedStatus = array_merge($parsedStatus, $this->prefixArrayKeys($status['StatusSTS'], 'Sts'));
+        $parsedStatus = array_merge($parsedStatus, $status['StatusMQT']);
+        $parsedStatus = array_merge($parsedStatus, $this->prefixArrayKeys($status['StatusNET'], 'Net'));
+        $parsedStatus = array_merge($parsedStatus, $this->prefixArrayKeys($status['StatusLOG'], 'Log'));
+        $parsedStatus = array_merge($parsedStatus, $this->prefixArrayKeys($status['StatusPRM'], 'Prm'));
+        $parsedStatus = array_merge($parsedStatus, $this->prefixArrayKeys($status['StatusFWR'], 'Fwr'));
+        $parsedStatus = array_merge($parsedStatus, $status['Status']);
+
+        return $parsedStatus;
+    }
+
+    protected function prepareRequest(): Url
+    {
+        return $this->request->getUrl()->setIpAddress($this->device->getIpAddress());
     }
 }
