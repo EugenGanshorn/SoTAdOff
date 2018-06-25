@@ -7,6 +7,7 @@ use App\Utils\DeviceHelper;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
@@ -44,9 +45,9 @@ class IndexController extends Controller
      * @param EntityManagerInterface $entityManager
      * @param int                    $id
      *
-     * @return \Symfony\Component\HttpFoundation\RedirectResponse
+     * @return RedirectResponse
      */
-    public function toggle(EntityManagerInterface $entityManager, int $id): \Symfony\Component\HttpFoundation\RedirectResponse
+    public function toggle(EntityManagerInterface $entityManager, int $id): RedirectResponse
     {
         $device = $this->deviceRespository->find($id);
 
