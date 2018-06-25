@@ -60,11 +60,22 @@ class DeviceHelper
         $this->entityManager->flush();
     }
 
-    public function getStatus(): array
+    public function isExists(int $timeout = 1): bool
+    {
+        try {
+            $this->getStatus(['timeout' => $timeout]);
+        } catch (\Exception $e) {
+            return false;
+        }
+
+        return true;
+    }
+
+    public function getStatus(array $options = []): array
     {
         $this->prepareRequest();
 
-        return $this->request->Status(0);
+        return $this->request->Status(0, $options);
     }
 
     public function toggle(): void

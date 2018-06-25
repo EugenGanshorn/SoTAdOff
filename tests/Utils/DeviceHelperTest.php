@@ -95,7 +95,7 @@ class DeviceHelperTest extends TestCase
             ->will($this->onConsecutiveCalls(
                 ['foo' => 'bar'],
                 [
-                    'Status'    => ['FriendlyName' => []],
+                    'Status' => ['FriendlyName' => []],
                     'StatusSTS' => [
                         'Wifi' => [],
                     ],
