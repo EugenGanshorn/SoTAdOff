@@ -22,6 +22,7 @@
     },
     "require-dev": {
         "friendsofphp/php-cs-fixer": "^2.12",
+        "infection/infection": "dev-master",
         "symfony/dotenv": "^4.1",
         "symfony/maker-bundle": "^1.5",
         "symfony/test-pack": "^1.0",
