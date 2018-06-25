@@ -107,7 +107,7 @@ class DeviceHelper
         return $status;
     }
 
-    public function toogle(): void
+    public function toggle(): void
     {
         $this->request->getUrl()->setIpAddress($this->device->getIpAddress());
 

@@ -53,7 +53,7 @@ class IndexController extends Controller
         if (null !== $device) {
             $this->deviceHelper
                 ->setDevice($device)
-                ->toogle()
+                ->toggle()
             ;
         }
 
