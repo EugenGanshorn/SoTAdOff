@@ -62,6 +62,7 @@ class DeviceHelper
     public function getStatus(): array
     {
         $this->prepareRequest();
+
         return $this->request->Status(0);
     }
 
