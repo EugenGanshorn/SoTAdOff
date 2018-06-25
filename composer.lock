@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "9b19d134288a82ed2571f64437bd0053",
+    "content-hash": "dff52e78c93b9712b00260774e0f2937",
     "packages": [
         {
             "name": "alterphp/easyadmin-extension-bundle",
@@ -1168,12 +1168,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/EugenGanshorn/TasmotaHttpClient.git",
-                "reference": "b20b8d418141d50d7a02bbaa958dfd733054fbcd"
+                "reference": "92af03322eae646afc7ff6303d3f4219df573f30"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/EugenGanshorn/TasmotaHttpClient/zipball/b20b8d418141d50d7a02bbaa958dfd733054fbcd",
-                "reference": "b20b8d418141d50d7a02bbaa958dfd733054fbcd",
+                "url": "https://api.github.com/repos/EugenGanshorn/TasmotaHttpClient/zipball/92af03322eae646afc7ff6303d3f4219df573f30",
+                "reference": "92af03322eae646afc7ff6303d3f4219df573f30",
                 "shasum": ""
             },
             "require": {
@@ -1199,7 +1199,7 @@
                     "email": "eugen@ganshorn.eu"
                 }
             ],
-            "time": "2018-06-25T21:44:51+00:00"
+            "time": "2018-06-25T22:38:18+00:00"
         },
         {
             "name": "friendsofsymfony/user-bundle",
