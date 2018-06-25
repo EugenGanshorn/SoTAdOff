@@ -5,6 +5,7 @@ namespace App\Utils;
 use App\Entity\Device;
 use Doctrine\ORM\EntityManagerInterface;
 use GuzzleHttp\Client;
+use Symfony\Component\Serializer\SerializerInterface;
 use TasmotaHttpClient\Request;
 use TasmotaHttpClient\Url;
 
@@ -31,6 +32,11 @@ class DeviceHelper
     protected $entityManager;
 
     /**
+     * @var SerializerInterface
+     */
+    protected $serializer;
+
+    /**
      * @var Device
      */
     protected $device;
@@ -43,17 +49,12 @@ class DeviceHelper
 
     public function persistStatus(array $status): void
     {
-        $parsedStatus = $this->parseStatus($status);
-        foreach ($parsedStatus as $name => $value) {
-            if (!is_scalar($value)) {
-                continue;
-            }
-
-            $methodName = sprintf('set%s', $name);
-            if (method_exists($this->device, $methodName)) {
-                $this->device->$methodName($value);
-            }
-        }
+        $this->serializer->deserialize(
+            json_encode($this->parseStatus($status)),
+            Device::class,
+            'json',
+            ['object_to_populate' => $this->device]
+        );
 
         $this->entityManager->persist($this->device);
         $this->entityManager->flush();
@@ -62,7 +63,6 @@ class DeviceHelper
     public function getStatus(): array
     {
         $this->prepareRequest();
-
         return $this->request->Status(0);
     }
 
@@ -142,6 +142,20 @@ class DeviceHelper
     }
 
     /**
+     * @required
+     *
+     * @param SerializerInterface $serializer
+     *
+     * @return DeviceHelper
+     */
+    public function setSerializer(SerializerInterface $serializer): DeviceHelper
+    {
+        $this->serializer = $serializer;
+
+        return $this;
+    }
+
+    /**
      * @param array  $inputArray
      * @param string $prefix
      *
@@ -165,8 +179,15 @@ class DeviceHelper
         // convert friendly name to string
         $status['Status']['FriendlyName'] = implode(' ', $status['Status']['FriendlyName']);
 
+        // remove unsed keys
+        unset($status['StatusLOG']['SSId'], $status['StatusLOG']['SetOption']);
+
         $parsedStatus = [];
         $parsedStatus = array_merge($parsedStatus, $this->prefixArrayKeys($status['StatusSTS']['Wifi'], 'Wifi'));
+
+        // remove "duplicate" keys
+        unset($status['StatusSTS']['Wifi']);
+
         $parsedStatus = array_merge($parsedStatus, $this->prefixArrayKeys($status['StatusSTS'], 'Sts'));
         $parsedStatus = array_merge($parsedStatus, $status['StatusMQT']);
         $parsedStatus = array_merge($parsedStatus, $this->prefixArrayKeys($status['StatusNET'], 'Net'));
@@ -178,6 +199,9 @@ class DeviceHelper
         return $parsedStatus;
     }
 
+    /**
+     * @return Url
+     */
     protected function prepareRequest(): Url
     {
         return $this->request->getUrl()->setIpAddress($this->device->getIpAddress());
