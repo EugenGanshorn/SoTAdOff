@@ -33,6 +33,8 @@ class AppFindTasmotaDevicesCommand extends Command
             ->addArgument('from', InputArgument::REQUIRED, 'first ip address')
             ->addArgument('to', InputArgument::REQUIRED, 'last ip address')
             ->addOption('timeout', 't', InputOption::VALUE_OPTIONAL, 'timeout', 1)
+            ->addOption('ignore-exists', 'i', InputOption::VALUE_OPTIONAL, 'ignore already exists devices', 1)
+            ->addOption('auto-create', 'c', InputOption::VALUE_OPTIONAL, 'create automatically new founded devices')
         ;
     }
 
@@ -48,10 +50,21 @@ class AppFindTasmotaDevicesCommand extends Command
         for ($i = ip2long($from), $iMax = ip2long($to); $i <= $iMax; ++$i) {
             $ipAddress = long2ip($i);
 
+            if ($input->getOption('ignore-exists')) {
+                /** @noinspection PhpUndefinedMethodInspection */
+                $device = $this->deviceRespository->findByIpAddress($ipAddress);
+                if (!empty($device)) {
+                    $io->note(sprintf('device %s already exists', $ipAddress));
+                    continue;
+                }
+            }
+
             $io->note(sprintf('scan %s', $ipAddress));
 
             $device = new Device();
             $device->setIpAddress($ipAddress);
+            $device->setPosition($i);
+
             $this->deviceHelper->setDevice($device);
 
             $isExists = $this->deviceHelper->isExists($input->getOption('timeout'));
@@ -59,13 +72,17 @@ class AppFindTasmotaDevicesCommand extends Command
             if ($isExists) {
                 $io->success(sprintf('new tasmota device found at %s', $ipAddress));
                 ++$amountNewDevices;
+
+                if ($input->hasOption('auto-create')) {
+                    $this->deviceHelper->updateStatus();
+                }
             }
         }
 
         if ($amountNewDevices) {
             $io->success(sprintf('Found %d new devices', $amountNewDevices));
         } else {
-            $io->error('No devices found');
+            $io->error('No new devices found');
         }
     }
 

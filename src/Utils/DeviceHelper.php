@@ -49,12 +49,17 @@ class DeviceHelper
 
     public function persistStatus(array $status): void
     {
+        $parsedStatus = $this->parseStatus($status);
         $this->serializer->deserialize(
-            json_encode($this->parseStatus($status)),
+            json_encode($parsedStatus),
             Device::class,
             'json',
             ['object_to_populate' => $this->device]
         );
+
+        if (null === $this->device->getName()) {
+            $this->device->setName($parsedStatus['FriendlyName']);
+        }
 
         $this->entityManager->persist($this->device);
         $this->entityManager->flush();
