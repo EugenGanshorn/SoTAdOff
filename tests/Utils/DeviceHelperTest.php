@@ -44,7 +44,7 @@ class DeviceHelperTest extends TestCase
 
         $request->expects($this->once())
             ->method('__call')
-            ->with('Status', [0])
+            ->with('Status', [0, []])
             ->willReturn(['foo' => 'bar'])
         ;
 
@@ -90,7 +90,7 @@ class DeviceHelperTest extends TestCase
             ->method('__call')
             ->withConsecutive(
                 ['Power', [2]],
-                ['Status', [0]]
+                ['Status', [0, []]]
             )
             ->will($this->onConsecutiveCalls(
                 ['foo' => 'bar'],
