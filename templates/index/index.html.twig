@@ -8,7 +8,7 @@
 {% endblock %}
 
 {% block body %}
-    <ul class="list-inline d-flex flex-row">
+    <ul class="list-inline d-flex flex-wrap">
     {% for device in devices %}
         <li class="p-2">
             <a href="/{{ device.id }}" role="button" class="btn btn{% if device.power == 0 %}-outline{% endif %}-primary btn-lg">
