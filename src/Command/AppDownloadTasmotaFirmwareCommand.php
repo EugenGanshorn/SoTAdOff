@@ -7,7 +7,6 @@ use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\Console\Style\SymfonyStyle;
 
 class AppDownloadTasmotaFirmwareCommand extends ContainerAwareCommand
 {
@@ -28,9 +27,7 @@ class AppDownloadTasmotaFirmwareCommand extends ContainerAwareCommand
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $language = $input->getArgument('language');
-
-        $this->githubHelper->downloadFirmware($language);
+        $this->githubHelper->downloadFirmware($input->getArgument('language'));
     }
 
     /**

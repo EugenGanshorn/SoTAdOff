@@ -22,6 +22,20 @@ class GithubHelper
      */
     protected $projectDir;
 
+    /**
+     * @param $assetName
+     *
+     * @return string
+     */
+    public function getFilePath($assetName): string
+    {
+        return sprintf(
+            '%s/%s',
+            $this->getFirmwareDir(),
+            $assetName
+        );
+    }
+
     public function downloadFirmware(string $language): void
     {
         $result = $this->getLatest();
@@ -51,20 +65,6 @@ class GithubHelper
         return sprintf(
             '%s/var/firmware',
             $this->projectDir
-        );
-    }
-
-    /**
-     * @param $assetName
-     *
-     * @return string
-     */
-    protected function getFilePath($assetName): string
-    {
-        return sprintf(
-            '%s/%s',
-            $this->getFirmwareDir(),
-            $assetName
         );
     }
 
