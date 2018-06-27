@@ -84,6 +84,23 @@ class DeviceHelper
         return true;
     }
 
+    public function doUpgrade(string $otaUrl, int $timeout = 60): bool
+    {
+        $this->setOtaUrl($otaUrl);
+        $this->upgrade();
+
+        $start = microtime(true);
+        do {
+            usleep(250000);
+
+            if ($start + $timeout < microtime(true)) {
+                return false;
+            }
+        } while (!$this->isExists());
+
+        return true;
+    }
+
     public function persistStatus(array $status): void
     {
         $parsedStatus = $this->parseStatus($status);

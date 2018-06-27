@@ -35,24 +35,22 @@ class AppUpdateTasmotaFirmwareCommand extends Command
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $io = new SymfonyStyle($input, $output);
-        $devices = $input->getOption('device');
 
-        foreach ($devices as $device) {
-            $this->doUpgrade('minimal');
-            $this->doUpgrade('full');
+        $ipAddresses = $input->getOption('device');
+        foreach ($ipAddresses as $ipAddress) {
+            /** @noinspection PhpUndefinedMethodInspection */
+            $device = $this->deviceRespository->findByIpAddress($ipAddress);
 
-            $io->success(sprintf('Successful updated device: %s', $device));
+            $this->deviceHelper->setDevice($device);
+            foreach (['minimal', 'full'] as $otaUrl) {
+                $sucessful = $this->deviceHelper->doUpgrade($otaUrl);
+                if (!$sucessful) {
+                    break;
+                }
+            }
+
+            $io->success(sprintf('Successful updated device: %s', $ipAddress));
         }
-    }
-
-    protected function doUpgrade(string $otaUrl): void
-    {
-        $this->deviceHelper->setOtaUrl($otaUrl);
-        $this->deviceHelper->upgrade();
-
-        do {
-            usleep(500000);
-        } while (!$this->deviceHelper->isExists());
     }
 
     /**
