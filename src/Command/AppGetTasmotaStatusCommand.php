@@ -7,7 +7,6 @@ use App\Utils\DeviceHelper;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\Console\Style\SymfonyStyle;
 
 class AppGetTasmotaStatusCommand extends ContainerAwareCommand
 {
@@ -32,16 +31,12 @@ class AppGetTasmotaStatusCommand extends ContainerAwareCommand
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $io = new SymfonyStyle($input, $output);
-
         foreach ($this->deviceRespository->findAll() as $device) {
             $this->deviceHelper
                 ->setDevice($device)
                 ->updateStatus()
             ;
         }
-
-        //$io->success('');
     }
 
     /**
