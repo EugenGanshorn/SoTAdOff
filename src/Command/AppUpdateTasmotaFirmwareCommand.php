@@ -5,6 +5,7 @@ namespace App\Command;
 use App\Repository\DeviceRepository;
 use App\Utils\DeviceHelper;
 use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
@@ -54,8 +55,15 @@ class AppUpdateTasmotaFirmwareCommand extends Command
         $ipAddresses = $input->getOption('device');
 
         if ($input->getOption('download-firmware')) {
+            $command = $this->getApplication()->find('app:download-tasmota-firmware');
+
+            $downloadInput = new ArrayInput([
+                'command' => 'app:download-tasmota-firmware',
+                'language' => $language,
+            ]);
+
             try {
-                $this->appDownloadTasmotaFirmwareCommand->run($input, $output);
+                $command->run($downloadInput, $output);
             } catch (\Exception $e) {
             }
         }
