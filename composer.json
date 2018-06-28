@@ -23,6 +23,7 @@
         "symfony/flex": "^1.0",
         "symfony/framework-bundle": "^4.1",
         "symfony/lts": "^4@dev",
+        "symfony/process": "^4.1",
         "symfony/serializer": "^4.1",
         "symfony/swiftmailer-bundle": "^3.2",
         "symfony/templating": "^4.1",
