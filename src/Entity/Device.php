@@ -274,6 +274,46 @@ class Device
     /**
      * @ORM\Column(type="integer", nullable=true)
      */
+    private $stsDimmer;
+
+    /**
+     * @ORM\Column(type="string", nullable=true)
+     */
+    private $stsColor;
+
+    /**
+     * @ORM\Column(type="string", nullable=true)
+     */
+    private $stsHSBColor;
+
+    /**
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    private $stsCt;
+
+    /**
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    private $stsScheme;
+
+    /**
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    private $stsFade;
+
+    /**
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    private $stsSpeed;
+
+    /**
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    private $stsLedTable;
+
+    /**
+     * @ORM\Column(type="integer", nullable=true)
+     */
     private $wifiAp;
 
     /**
@@ -952,6 +992,102 @@ class Device
     public function setWifiApMac(?string $wifiApMac): self
     {
         $this->wifiApMac = $wifiApMac;
+
+        return $this;
+    }
+
+    public function getStsDimmer(): ?int
+    {
+        return $this->stsDimmer;
+    }
+
+    public function setStsDimmer(?int $stsDimmer): self
+    {
+        $this->stsDimmer = $stsDimmer;
+
+        return $this;
+    }
+
+    public function getStsColor(): ?string
+    {
+        return $this->stsColor;
+    }
+
+    public function setStsColor(?string $stsColor): self
+    {
+        $this->stsColor = $stsColor;
+
+        return $this;
+    }
+
+    public function getStsHSBColor(): ?string
+    {
+        return $this->stsHSBColor;
+    }
+
+    public function setStsHSBColor(?string $stsHSBColor): self
+    {
+        $this->stsHSBColor = $stsHSBColor;
+
+        return $this;
+    }
+
+    public function getStsCt(): ?int
+    {
+        return $this->stsCt;
+    }
+
+    public function setStsCt(?int $stsCt): self
+    {
+        $this->stsCt = $stsCt;
+
+        return $this;
+    }
+
+    public function getStsScheme(): ?int
+    {
+        return $this->stsScheme;
+    }
+
+    public function setStsScheme(?int $stsScheme): self
+    {
+        $this->stsScheme = $stsScheme;
+
+        return $this;
+    }
+
+    public function getStsFade(): ?int
+    {
+        return $this->stsFade;
+    }
+
+    public function setStsFade(?int $stsFade): self
+    {
+        $this->stsFade = $stsFade;
+
+        return $this;
+    }
+
+    public function getStsSpeed(): ?int
+    {
+        return $this->stsSpeed;
+    }
+
+    public function setStsSpeed(?int $stsSpeed): self
+    {
+        $this->stsSpeed = $stsSpeed;
+
+        return $this;
+    }
+
+    public function getStsLedTable(): ?int
+    {
+        return $this->stsLedTable;
+    }
+
+    public function setStsLedTable(?int $stsLedTable): self
+    {
+        $this->stsLedTable = $stsLedTable;
 
         return $this;
     }
