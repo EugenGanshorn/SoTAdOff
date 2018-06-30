@@ -81,19 +81,21 @@
 {% block body %}
     <ul class="list-inline d-flex justify-content-between flex-wrap">
     {% for device in devices %}
-        <li class="p-2">
-            <a href="/{{ device.id }}" role="button" class="btn btn{% if device.power == 0 %}-outline{% endif %}-primary btn-lg" style="width: 350px;">
-                <span class="far fa-lightbulb"></span>
-                {{ device.name }}
-            </a>
+        {% if device.visible %}
+            <li class="p-2">
+                <a href="/{{ device.id }}" role="button" class="btn btn{% if device.power == 0 %}-outline{% endif %}-primary btn-lg" style="width: 350px;">
+                    <span class="far fa-lightbulb"></span>
+                    {{ device.name }}
+                </a>
 
-            {% if device.module == 26 %}
-                <input type="text" class="form-control colorpicker" value="{{ device.stsColor }}" /><br />
-                <input type="range" class="form-control temperature" min="153" max="500" value="{{ device.stsCt }}"><br />
-                <input type="range" class="form-control dimmer" min="1" max="100" value="{{ device.stsDimmer }}"><br />
-                <input type="range" class="form-control speed" min="1" max="20" value="{{ device.stsSpeed }}"><br />
-            {% endif %}
-        </li>
+                {% if device.module == 26 %}
+                    <input type="text" class="form-control colorpicker" value="{{ device.stsColor }}" /><br />
+                    <input type="range" class="form-control temperature" min="153" max="500" value="{{ device.stsCt }}"><br />
+                    <input type="range" class="form-control dimmer" min="1" max="100" value="{{ device.stsDimmer }}"><br />
+                    <input type="range" class="form-control speed" min="1" max="20" value="{{ device.stsSpeed }}"><br />
+                {% endif %}
+            </li>
+        {% endif %}
     {% endfor %}
     </ul>
 {% endblock %}

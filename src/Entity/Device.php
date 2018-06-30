@@ -22,6 +22,11 @@ class Device
     private $name;
 
     /**
+     * @ORM\Column(type="integer", options={"unsigned":true, "default":1})
+     */
+    private $visible;
+
+    /**
      * @ORM\Column(type="string", length=255, options={"default":""})
      */
     private $ipAddress;
@@ -1088,6 +1093,18 @@ class Device
     public function setStsLedTable(?int $stsLedTable): self
     {
         $this->stsLedTable = $stsLedTable;
+
+        return $this;
+    }
+
+    public function getVisible(): ?int
+    {
+        return $this->visible;
+    }
+
+    public function setVisible(int $visible): self
+    {
+        $this->visible = $visible;
 
         return $this;
     }
