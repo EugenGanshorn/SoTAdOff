@@ -11,7 +11,7 @@ use Symfony\Component\Console\Input\InputOption;
 
 class CommandHelperTest extends TestCase
 {
-    public function testBuildCommand()
+    public function testBuildCommand(): void
     {
         $sut = new CommandHelper();
 

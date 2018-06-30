@@ -139,6 +139,8 @@ class DeviceHelper
         $this->setOtaUrl($otaUrl);
         $this->upgrade();
 
+        sleep(60);
+
         $start = microtime(true);
         do {
             usleep(250000);

@@ -1,7 +1,11 @@
 # Put parameters here that don't need to change on each machine where the app is deployed
 # https://symfony.com/doc/current/best_practices/configuration.html#application-related-configuration
 parameters:
-    locale: 'en'
+    locale: 'de'
+    router.request_context.host: 10.0.10.134:8000
+    router.request_context.scheme: http
+    asset.request_context.base_path: '%router.request_context.base_url%'
+    asset.request_context.secure: false
 
 services:
     # default configuration for services in *this* file

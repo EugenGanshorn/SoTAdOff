@@ -65,7 +65,12 @@ class AppUpdateTasmotaFirmwareCommand extends Command
             $this->deviceHelper->setDevice($device);
 
             foreach (['minimal', $language] as $otaUrl) {
-                $otaUrl = $this->router->generate('download', ['filename' => sprintf('sonoff-%s.bin', $otaUrl)]);
+                $otaUrl = $this->router->generate(
+                    'download',
+                    ['filename' => sprintf('sonoff-%s.bin', $otaUrl)],
+                    UrlGeneratorInterface::ABSOLUTE_URL
+                );
+
                 $sucessful = $this->deviceHelper->doUpgrade($otaUrl);
                 if (!$sucessful) {
                     break;
