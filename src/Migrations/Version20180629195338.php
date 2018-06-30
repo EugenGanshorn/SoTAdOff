@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace DoctrineMigrations;
 
@@ -10,10 +12,10 @@ use Doctrine\Migrations\AbstractMigration;
  */
 final class Version20180629195338 extends AbstractMigration
 {
-    public function up(Schema $schema) : void
+    public function up(Schema $schema): void
     {
         // this up() migration is auto-generated, please modify it to your needs
-        $this->abortIf($this->connection->getDatabasePlatform()->getName() !== 'sqlite', 'Migration can only be executed safely on \'sqlite\'.');
+        $this->abortIf('sqlite' !== $this->connection->getDatabasePlatform()->getName(), 'Migration can only be executed safely on \'sqlite\'.');
 
         $this->addSql('ALTER TABLE device ADD COLUMN sts_dimmer INTEGER DEFAULT NULL');
         $this->addSql('ALTER TABLE device ADD COLUMN sts_color VARCHAR(255) DEFAULT NULL');
@@ -25,10 +27,10 @@ final class Version20180629195338 extends AbstractMigration
         $this->addSql('ALTER TABLE device ADD COLUMN sts_led_table INTEGER DEFAULT NULL');
     }
 
-    public function down(Schema $schema) : void
+    public function down(Schema $schema): void
     {
         // this down() migration is auto-generated, please modify it to your needs
-        $this->abortIf($this->connection->getDatabasePlatform()->getName() !== 'sqlite', 'Migration can only be executed safely on \'sqlite\'.');
+        $this->abortIf('sqlite' !== $this->connection->getDatabasePlatform()->getName(), 'Migration can only be executed safely on \'sqlite\'.');
 
         $this->addSql('CREATE TEMPORARY TABLE __temp__device AS SELECT id, name, ip_address, username, password, position, module, friendly_name, topic, button_topic, power, power_on_state, led_state, save_data, save_state, button_retain, power_retain, prm_baudrate, prm_group_topic, prm_ota_url, prm_restart_reason, prm_sleep, prm_boot_count, prm_save_count, prm_save_address, fwr_version, fwr_build_date_time, fwr_boot, log_serial_log, log_web_log, log_sys_log, log_log_host, log_log_port, log_tele_period, net_hostname, net_ip_address, net_gateway, net_subnetmask, net_dns_server, net_mac, net_webserver, net_wifi_config, mqtt_host, mqtt_port, mqtt_client_mask, mqtt_client, mqtt_user, mqtt_type, sts_time, sts_uptime, sts_vcc, sts_power, wifi_ap, wifi_ssid, wifi_rssi, wifi_ap_mac FROM device');
         $this->addSql('DROP TABLE device');

@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "373a94bdaf3b4468f98364d775771cc5",
+    "content-hash": "3c1d29547272de98de6d2b57c74841b0",
     "packages": [
         {
             "name": "alterphp/easyadmin-extension-bundle",
@@ -98,6 +98,48 @@
                 "generator"
             ],
             "time": "2018-06-01T14:48:26+00:00"
+        },
+        {
+            "name": "components/jquery",
+            "version": "3.3.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/components/jquery.git",
+                "reference": "459648cda77875519c5da3ae1dd0ed5d170aa649"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/components/jquery/zipball/459648cda77875519c5da3ae1dd0ed5d170aa649",
+                "reference": "459648cda77875519c5da3ae1dd0ed5d170aa649",
+                "shasum": ""
+            },
+            "type": "component",
+            "extra": {
+                "component": {
+                    "scripts": [
+                        "jquery.js"
+                    ],
+                    "files": [
+                        "jquery.min.js",
+                        "jquery.min.map",
+                        "jquery.slim.js",
+                        "jquery.slim.min.js",
+                        "jquery.slim.min.map"
+                    ]
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "JS Foundation and other contributors"
+                }
+            ],
+            "description": "jQuery JavaScript Library",
+            "homepage": "http://jquery.com",
+            "time": "2018-03-04T13:23:48+00:00"
         },
         {
             "name": "doctrine/annotations",
@@ -1168,12 +1210,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/EugenGanshorn/TasmotaHttpClient.git",
-                "reference": "eed76db9629d13d1eefaeb9b116b723041686a7c"
+                "reference": "c191821e02a96886dadb48465471d6be474bfb0d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/EugenGanshorn/TasmotaHttpClient/zipball/eed76db9629d13d1eefaeb9b116b723041686a7c",
-                "reference": "eed76db9629d13d1eefaeb9b116b723041686a7c",
+                "url": "https://api.github.com/repos/EugenGanshorn/TasmotaHttpClient/zipball/c191821e02a96886dadb48465471d6be474bfb0d",
+                "reference": "c191821e02a96886dadb48465471d6be474bfb0d",
                 "shasum": ""
             },
             "require": {
@@ -1199,7 +1241,7 @@
                     "email": "eugen@ganshorn.eu"
                 }
             ],
-            "time": "2018-06-27T18:14:49+00:00"
+            "time": "2018-06-29T20:07:18+00:00"
         },
         {
             "name": "friendsofsymfony/user-bundle",
@@ -1457,6 +1499,37 @@
                 "url"
             ],
             "time": "2017-03-20T17:10:46+00:00"
+        },
+        {
+            "name": "itsjavi/bootstrap-colorpicker",
+            "version": "2.5.2",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/farbelous/bootstrap-colorpicker.git",
+                "reference": "d56d0d3d5bee59904d48bce3c47a0029741e10e6"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/farbelous/bootstrap-colorpicker/zipball/d56d0d3d5bee59904d48bce3c47a0029741e10e6",
+                "reference": "d56d0d3d5bee59904d48bce3c47a0029741e10e6",
+                "shasum": ""
+            },
+            "require": {
+                "components/jquery": ">=1.10"
+            },
+            "type": "library",
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "Apache License Version 2.0"
+            ],
+            "authors": [
+                {
+                    "name": "Javier Aguilar",
+                    "homepage": "https://itsjavi.com"
+                }
+            ],
+            "description": "Fancy and customizable colorpicker plugin for Twitter Bootstrap",
+            "time": "2018-03-29T04:47:33+00:00"
         },
         {
             "name": "jdorn/sql-formatter",
@@ -1986,23 +2059,23 @@
         },
         {
             "name": "sensio/framework-extra-bundle",
-            "version": "v5.1.6",
+            "version": "v5.2.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sensiolabs/SensioFrameworkExtraBundle.git",
-                "reference": "bf4940572e43af679aaa13be98f3446a1c237bd8"
+                "reference": "50e8b7292425957b8fd66887504430c89bcbd83c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sensiolabs/SensioFrameworkExtraBundle/zipball/bf4940572e43af679aaa13be98f3446a1c237bd8",
-                "reference": "bf4940572e43af679aaa13be98f3446a1c237bd8",
+                "url": "https://api.github.com/repos/sensiolabs/SensioFrameworkExtraBundle/zipball/50e8b7292425957b8fd66887504430c89bcbd83c",
+                "reference": "50e8b7292425957b8fd66887504430c89bcbd83c",
                 "shasum": ""
             },
             "require": {
                 "doctrine/common": "^2.2",
                 "symfony/config": "^3.3|^4.0",
                 "symfony/dependency-injection": "^3.3|^4.0",
-                "symfony/framework-bundle": "^3.3|^4.0",
+                "symfony/framework-bundle": "^3.4|^4.0",
                 "symfony/http-kernel": "^3.3|^4.0"
             },
             "require-dev": {
@@ -2012,6 +2085,8 @@
                 "symfony/dom-crawler": "^3.3|^4.0",
                 "symfony/expression-language": "^3.3|^4.0",
                 "symfony/finder": "^3.3|^4.0",
+                "symfony/monolog-bridge": "^3.0|^4.0",
+                "symfony/monolog-bundle": "^3.2",
                 "symfony/phpunit-bridge": "^3.3|^4.0",
                 "symfony/psr-http-message-bridge": "^0.3",
                 "symfony/security-bundle": "^3.3|^4.0",
@@ -2028,7 +2103,7 @@
             "type": "symfony-bundle",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "5.1.x-dev"
+                    "dev-master": "5.2.x-dev"
                 }
             },
             "autoload": {
@@ -2051,7 +2126,7 @@
                 "annotations",
                 "controllers"
             ],
-            "time": "2018-02-14T08:40:54+00:00"
+            "time": "2018-05-12T09:37:42+00:00"
         },
         {
             "name": "swiftmailer/swiftmailer",

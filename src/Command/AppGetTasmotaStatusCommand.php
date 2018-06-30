@@ -3,10 +3,14 @@
 namespace App\Command;
 
 use App\Repository\DeviceRepository;
+use App\Utils\CommandHelper;
 use App\Utils\DeviceHelper;
+use App\Utils\ProcessManager;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
+use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Process\Process;
 
 class AppGetTasmotaStatusCommand extends ContainerAwareCommand
 {
@@ -22,21 +26,64 @@ class AppGetTasmotaStatusCommand extends ContainerAwareCommand
      */
     protected $deviceRespository;
 
+    /**
+     * @var ProcessManager
+     */
+    protected $processManager;
+
+    /**
+     * @var CommandHelper
+     */
+    protected $commandHelper;
+
     protected function configure()
     {
         $this
             ->setDescription('get tasmota status from all devices')
+            ->addOption('device', 'd', InputArgument::OPTIONAL, 'ip address')
         ;
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        foreach ($this->deviceRespository->findAll() as $device) {
+        $ipAddress = $input->getOption('device');
+        if ($input->hasOption('device') && null !== $ipAddress) {
+            /** @noinspection PhpUndefinedMethodInspection */
+            $devices = [$this->deviceRespository->findOneByIpAddress($ipAddress)];
+        } else {
+            $devices = $this->deviceRespository->findAll();
+        }
+
+        foreach ($devices as $device) {
+            //$this->startProcess($input, $device->getIpAddress());
+
             $this->deviceHelper
                 ->setDevice($device)
                 ->updateStatus()
             ;
         }
+    }
+
+    /**
+     * @param $input
+     * @param $ipAddress
+     *
+     * @return Process
+     */
+    protected function startProcess(InputInterface $input, string $ipAddress)
+    {
+        $commandName = $this->getName();
+        $newInput = clone $input;
+        $newInput->setArgument('device', $ipAddress);
+
+        $process = $this->processManager->createNewProcess($this->commandHelper->buildCommand($commandName, $newInput));
+        $process->start(
+            function ($type, $buffer) {
+                echo $buffer;
+            }
+        );
+
+        return $process;
     }
 
     /**
@@ -63,6 +110,34 @@ class AppGetTasmotaStatusCommand extends ContainerAwareCommand
     public function setDeviceRespository(DeviceRepository $deviceRespository): AppGetTasmotaStatusCommand
     {
         $this->deviceRespository = $deviceRespository;
+
+        return $this;
+    }
+
+    /**
+     * @required
+     *
+     * @param ProcessManager $processManager
+     *
+     * @return AppGetTasmotaStatusCommand
+     */
+    public function setProcessManager(ProcessManager $processManager): AppGetTasmotaStatusCommand
+    {
+        $this->processManager = $processManager;
+
+        return $this;
+    }
+
+    /**
+     * @required
+     *
+     * @param CommandHelper $commandHelper
+     *
+     * @return AppGetTasmotaStatusCommand
+     */
+    public function setCommandHelper(CommandHelper $commandHelper): AppGetTasmotaStatusCommand
+    {
+        $this->commandHelper = $commandHelper;
 
         return $this;
     }

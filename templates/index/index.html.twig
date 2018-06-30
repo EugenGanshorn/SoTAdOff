@@ -5,16 +5,94 @@
 {% block stylesheets %}
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" integrity="sha384-WskhaSGFgHYWDcbwN70/dfYBj47jz9qbsMId/iRN3ewGhXQFZCSftd1LZCfmhktB" crossorigin="anonymous">
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.1.0/css/all.css" integrity="sha384-lKuwvrZot6UHsBSfcMvOkWwlCMgc0TaWr+30HWe3a4ltaBwTZhyTEggF5tJv8tbt" crossorigin="anonymous">
+    <link href="dist/css/bootstrap-colorpicker.css" rel="stylesheet">
+    <style>
+        .colorpicker-2x .colorpicker-saturation {
+            width: 200px;
+            height: 200px;
+        }
+
+        .colorpicker-2x .colorpicker-hue,
+        .colorpicker-2x .colorpicker-alpha {
+            width: 30px;
+            height: 200px;
+        }
+
+        .colorpicker-2x .colorpicker-preview,
+        .colorpicker-2x .colorpicker-preview div {
+            height: 30px;
+            font-size: 16px;
+            line-height: 160%;
+        }
+
+        .colorpicker-saturation .colorpicker-guide,
+        .colorpicker-saturation .colorpicker-guide i {
+            height: 10px;
+            width: 10px;
+            border-radius: 10px;
+        }
+    </style>
+{% endblock %}
+
+{% block javascripts %}
+    <script src="//code.jquery.com/jquery-3.2.1.js"></script>
+    <script src="dist/js/bootstrap-colorpicker.js"></script>
+    <script>
+        $(function () {
+            $('.colorpicker')
+                .colorpicker({
+                    useAlpha: false,
+                    customClass: 'colorpicker-2x',
+                    sliders: {
+                        saturation: {
+                            maxLeft: 200,
+                            maxTop: 200
+                        },
+                        hue: {
+                            maxTop: 200
+                        },
+                        alpha: {
+                            maxTop: 200
+                        }
+                    }
+                })
+                .on('blur', function (e) {
+                    window.location.href = $(this).siblings('a')[0].href + "/" + $(this).val().substring(1);
+                });
+
+            $('.temperature')
+                .on('change', function (e) {
+                    window.location.href = $(this).siblings('a')[0].href + "/temperature/" + $(this).val();
+                });
+
+            $('.dimmer')
+                .on('change', function (e) {
+                    window.location.href = $(this).siblings('a')[0].href + "/dimmer/" + $(this).val();
+                });
+
+            $('.speed')
+                .on('change', function (e) {
+                    window.location.href = $(this).siblings('a')[0].href + "/speed/" + $(this).val();
+                });
+        });
+    </script>
 {% endblock %}
 
 {% block body %}
-    <ul class="list-inline d-flex flex-wrap">
+    <ul class="list-inline d-flex justify-content-between flex-wrap">
     {% for device in devices %}
         <li class="p-2">
-            <a href="/{{ device.id }}" role="button" class="btn btn{% if device.power == 0 %}-outline{% endif %}-primary btn-lg">
+            <a href="/{{ device.id }}" role="button" class="btn btn{% if device.power == 0 %}-outline{% endif %}-primary btn-lg" style="width: 350px;">
                 <span class="far fa-lightbulb"></span>
                 {{ device.name }}
             </a>
+
+            {% if device.module == 26 %}
+                <input type="text" class="form-control colorpicker" value="{{ device.stsColor }}" /><br />
+                <input type="range" class="temperature" min="153" max="500" value="{{ device.stsCt }}"><br />
+                <input type="range" class="dimmer" min="1" max="100" value="{{ device.stsDimmer }}"><br />
+                <input type="range" class="speed" min="1" max="20" value="{{ device.stsSpeed }}"><br />
+            {% endif %}
         </li>
     {% endfor %}
     </ul>

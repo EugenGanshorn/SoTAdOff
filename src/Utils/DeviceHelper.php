@@ -55,6 +55,56 @@ class DeviceHelper
         $this->updateStatus();
     }
 
+    public function wakeup(?int $duration = 3600, ?int $wakeup = 100): void
+    {
+        $this->prepareRequest();
+        $this->request->WakeupDuration($duration);
+        $this->request->Wakeup($wakeup);
+        $this->updateStatus();
+    }
+
+    public function setColor(string $color): void
+    {
+        $this->prepareRequest();
+        $this->request->Color($color);
+        $this->updateStatus();
+    }
+
+    public function setTemperature(int $temperature): void
+    {
+        $this->prepareRequest();
+        $this->request->CT($temperature);
+        $this->updateStatus();
+    }
+
+    public function setDimmer(int $dimmer): void
+    {
+        $this->prepareRequest();
+        $this->request->Dimmer($dimmer);
+        $this->updateStatus();
+    }
+
+    public function setFade(bool $fade): void
+    {
+        $this->prepareRequest();
+        $this->request->Fade($fade);
+        $this->updateStatus();
+    }
+
+    public function setSpeed(int $speed): void
+    {
+        $this->prepareRequest();
+        $this->request->Speed($speed);
+        $this->updateStatus();
+    }
+
+    public function setLedTable(bool $ledTable): void
+    {
+        $this->prepareRequest();
+        $this->request->LedTable($ledTable);
+        $this->updateStatus();
+    }
+
     public function setOtaUrl(string $otaUrl): void
     {
         $this->prepareRequest();

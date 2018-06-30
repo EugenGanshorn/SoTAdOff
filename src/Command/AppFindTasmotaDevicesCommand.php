@@ -4,6 +4,7 @@ namespace App\Command;
 
 use App\Entity\Device;
 use App\Repository\DeviceRepository;
+use App\Utils\CommandHelper;
 use App\Utils\DeviceHelper;
 use App\Utils\ProcessManager;
 use Symfony\Component\Console\Command\Command;
@@ -32,6 +33,11 @@ class AppFindTasmotaDevicesCommand extends Command
      * @var ProcessManager
      */
     protected $processManager;
+
+    /**
+     * @var CommandHelper
+     */
+    protected $commandHelper;
 
     protected function configure()
     {
@@ -121,13 +127,15 @@ class AppFindTasmotaDevicesCommand extends Command
      *
      * @return Process
      */
-    protected function startProcess(InputInterface $input, $ipAddress): Process
+    protected function startProcess(InputInterface $input, string $ipAddress): Process
     {
         $commandName = $this->getName();
-        $arguments = $this->createCommandArguments($input, $ipAddress);
-        $options = $this->createCommandOptions($input);
 
-        $process = $this->processManager->createNewProcess($this->buildCommand($commandName, $arguments, $options));
+        $newInput = clone $input;
+        $newInput->setArgument('from', $ipAddress);
+        $newInput->setArgument('to', $ipAddress);
+
+        $process = $this->processManager->createNewProcess($this->commandHelper->buildCommand($commandName, $newInput));
         $process->start(
             function ($type, $buffer) {
                 echo $buffer;
@@ -135,61 +143,6 @@ class AppFindTasmotaDevicesCommand extends Command
         );
 
         return $process;
-    }
-
-    /**
-     * @param InputInterface $input
-     *
-     * @return array
-     */
-    protected function createCommandOptions(InputInterface $input): array
-    {
-        $options = [];
-        foreach ($input->getOptions() as $option => $value) {
-            if (false === $value || (null === $value && !$input->hasOption($option))) {
-                continue;
-            }
-
-            if (null === $value) {
-                $options[] = sprintf('--%s', $option);
-            } else {
-                $options[] = sprintf('--%s=%s', $option, $value);
-            }
-        }
-
-        return $options;
-    }
-
-    /**
-     * @param InputInterface $input
-     * @param                $ipAddress
-     *
-     * @return array
-     */
-    protected function createCommandArguments(InputInterface $input, $ipAddress): array
-    {
-        $arguments = $input->getArguments();
-        array_shift($arguments);
-        $arguments['from'] = $arguments['to'] = $ipAddress;
-
-        return $arguments;
-    }
-
-    /**
-     * @param $commandName
-     * @param $arguments
-     * @param $options
-     *
-     * @return string
-     */
-    protected function buildCommand(string $commandName, array $arguments, array $options): string
-    {
-        return sprintf(
-            'bin/console %s %s %s',
-            $commandName,
-            implode(' ', $arguments),
-            implode(' ', $options)
-        );
     }
 
     /**
@@ -230,6 +183,20 @@ class AppFindTasmotaDevicesCommand extends Command
     public function setProcessManager(ProcessManager $processManager): AppFindTasmotaDevicesCommand
     {
         $this->processManager = $processManager;
+
+        return $this;
+    }
+
+    /**
+     * @required
+     *
+     * @param CommandHelper $commandHelper
+     *
+     * @return AppFindTasmotaDevicesCommand
+     */
+    public function setCommandHelper(CommandHelper $commandHelper): AppFindTasmotaDevicesCommand
+    {
+        $this->commandHelper = $commandHelper;
 
         return $this;
     }

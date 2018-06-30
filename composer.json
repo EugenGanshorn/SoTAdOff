@@ -17,6 +17,7 @@
         "easycorp/easyadmin-bundle": "^1.17",
         "eugenganshorn/tasmota-http-client": "dev-master",
         "friendsofsymfony/user-bundle": "^2.1",
+        "itsjavi/bootstrap-colorpicker": "^2.5",
         "sensio/framework-extra-bundle": "^5.1",
         "symfony/console": "^4.1",
         "symfony/filesystem": "^4.1",
