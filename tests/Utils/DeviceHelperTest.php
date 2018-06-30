@@ -115,6 +115,6 @@ class DeviceHelperTest extends TestCase
         $sut->setUrl($url);
         $sut->setRequest($request);
 
-        $this->assertNull($sut->toggle());
+        $sut->toggle();
     }
 }
