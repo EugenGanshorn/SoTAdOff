@@ -46,7 +46,7 @@ class AppFindTasmotaDevicesCommand extends Command
             ->addArgument('from', InputArgument::REQUIRED, 'first ip address')
             ->addArgument('to', InputArgument::REQUIRED, 'last ip address')
             ->addOption('timeout', 't', InputOption::VALUE_OPTIONAL, 'timeout', 1)
-            ->addOption('ignore-exists', 'i', InputOption::VALUE_OPTIONAL, 'ignore already exists devices', false)
+            ->addOption('ignore-exists', 'i', InputOption::VALUE_OPTIONAL, 'ignore already exists devices', true)
             ->addOption('auto-create', 'c', InputOption::VALUE_OPTIONAL, 'create automatically new founded devices', false)
         ;
     }
@@ -76,7 +76,7 @@ class AppFindTasmotaDevicesCommand extends Command
             }
 
             /* @noinspection PhpUndefinedMethodInspection */
-            if ($ignoreExists && !empty($this->deviceRespository->findByIpAddress($ipAddress))) {
+            if ($ignoreExists && !empty($this->deviceRespository->findOneByIpAddress($ipAddress))) {
                 $io->note(sprintf('device %s already exists', $ipAddress));
                 continue;
             }

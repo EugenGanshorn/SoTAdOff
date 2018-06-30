@@ -46,16 +46,21 @@ class AppGetTasmotaStatusCommand extends ContainerAwareCommand
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
+        $startProcesses = false;
         $ipAddress = $input->getOption('device');
         if ($input->hasOption('device') && null !== $ipAddress) {
             /** @noinspection PhpUndefinedMethodInspection */
             $devices = [$this->deviceRespository->findOneByIpAddress($ipAddress)];
         } else {
             $devices = $this->deviceRespository->findAll();
+            $startProcesses = true;
         }
 
         foreach ($devices as $device) {
-            //$this->startProcess($input, $device->getIpAddress());
+            if ($startProcesses) {
+                $this->startProcess($input, $device->getIpAddress());
+                continue;
+            }
 
             $this->deviceHelper
                 ->setDevice($device)
@@ -70,11 +75,11 @@ class AppGetTasmotaStatusCommand extends ContainerAwareCommand
      *
      * @return Process
      */
-    protected function startProcess(InputInterface $input, string $ipAddress)
+    protected function startProcess(InputInterface $input, string $ipAddress): Process
     {
         $commandName = $this->getName();
         $newInput = clone $input;
-        $newInput->setArgument('device', $ipAddress);
+        $newInput->setOption('device', $ipAddress);
 
         $process = $this->processManager->createNewProcess($this->commandHelper->buildCommand($commandName, $newInput));
         $process->start(

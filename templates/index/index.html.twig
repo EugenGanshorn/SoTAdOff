@@ -89,9 +89,9 @@
 
             {% if device.module == 26 %}
                 <input type="text" class="form-control colorpicker" value="{{ device.stsColor }}" /><br />
-                <input type="range" class="temperature" min="153" max="500" value="{{ device.stsCt }}"><br />
-                <input type="range" class="dimmer" min="1" max="100" value="{{ device.stsDimmer }}"><br />
-                <input type="range" class="speed" min="1" max="20" value="{{ device.stsSpeed }}"><br />
+                <input type="range" class="form-control temperature" min="153" max="500" value="{{ device.stsCt }}"><br />
+                <input type="range" class="form-control dimmer" min="1" max="100" value="{{ device.stsDimmer }}"><br />
+                <input type="range" class="form-control speed" min="1" max="20" value="{{ device.stsSpeed }}"><br />
             {% endif %}
         </li>
     {% endfor %}

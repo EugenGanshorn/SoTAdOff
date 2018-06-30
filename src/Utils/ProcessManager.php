@@ -15,9 +15,9 @@ class ProcessManager
     /**
      * @var int
      */
-    protected $concurrentProcesses = 6;
+    protected $concurrentProcesses = 8;
 
-    public function __construct(int $concurrentProcesses = 6)
+    public function __construct(int $concurrentProcesses = 8)
     {
         $this->concurrentProcesses = $concurrentProcesses;
     }

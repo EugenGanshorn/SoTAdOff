@@ -1210,12 +1210,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/EugenGanshorn/TasmotaHttpClient.git",
-                "reference": "c191821e02a96886dadb48465471d6be474bfb0d"
+                "reference": "bd4d0ddd8a466367da5adf3acb97106f198ca3b4"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/EugenGanshorn/TasmotaHttpClient/zipball/c191821e02a96886dadb48465471d6be474bfb0d",
-                "reference": "c191821e02a96886dadb48465471d6be474bfb0d",
+                "url": "https://api.github.com/repos/EugenGanshorn/TasmotaHttpClient/zipball/bd4d0ddd8a466367da5adf3acb97106f198ca3b4",
+                "reference": "bd4d0ddd8a466367da5adf3acb97106f198ca3b4",
                 "shasum": ""
             },
             "require": {
@@ -1241,7 +1241,7 @@
                     "email": "eugen@ganshorn.eu"
                 }
             ],
-            "time": "2018-06-29T20:07:18+00:00"
+            "time": "2018-06-30T12:54:16+00:00"
         },
         {
             "name": "friendsofsymfony/user-bundle",
@@ -5004,12 +5004,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/infection/infection.git",
-                "reference": "cdd179bfd1c6d895a2559667ca8030d12a2feeb9"
+                "reference": "04f25fd3b20ecc5aed231bd1ef81aee8b6851157"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/infection/infection/zipball/cdd179bfd1c6d895a2559667ca8030d12a2feeb9",
-                "reference": "cdd179bfd1c6d895a2559667ca8030d12a2feeb9",
+                "url": "https://api.github.com/repos/infection/infection/zipball/04f25fd3b20ecc5aed231bd1ef81aee8b6851157",
+                "reference": "04f25fd3b20ecc5aed231bd1ef81aee8b6851157",
                 "shasum": ""
             },
             "require": {
@@ -5080,7 +5080,7 @@
                 "testing",
                 "unit testing"
             ],
-            "time": "2018-06-26T05:56:15+00:00"
+            "time": "2018-06-30T07:51:11+00:00"
         },
         {
             "name": "nikic/php-parser",
