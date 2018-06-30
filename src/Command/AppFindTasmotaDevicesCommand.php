@@ -54,12 +54,18 @@ class AppFindTasmotaDevicesCommand extends Command
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $io = new SymfonyStyle($input, $output);
+
         $from = ip2long($input->getArgument('from'));
         $to = ip2long($input->getArgument('to'));
         $ignoreExists = $input->getOption('ignore-exists');
         $autoCreate = $input->hasOption('auto-create');
 
-        $io->note(sprintf('start to scan new tasmota devices in your local network between %s and %s', $from, $to));
+        if ($to < $from) {
+            $toOriginal = $to;
+            $to = $from;
+            $from = $toOriginal;
+            unset($toOriginal);
+        }
 
         $createProcesses = false;
         if ($to - $from > 1) {

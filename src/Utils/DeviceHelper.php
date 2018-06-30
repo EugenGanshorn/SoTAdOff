@@ -134,7 +134,7 @@ class DeviceHelper
         return true;
     }
 
-    public function doUpgrade(string $otaUrl, int $timeout = 60): bool
+    public function doUpgrade(string $otaUrl, int $timeout = 180): bool
     {
         $this->setOtaUrl($otaUrl);
         $this->upgrade();

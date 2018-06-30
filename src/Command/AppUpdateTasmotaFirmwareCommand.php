@@ -55,22 +55,12 @@ class AppUpdateTasmotaFirmwareCommand extends Command
         $ipAddresses = $input->getOption('device');
 
         if ($input->getOption('download-firmware')) {
-            $command = $this->getApplication()->find('app:download-tasmota-firmware');
-
-            $downloadInput = new ArrayInput([
-                'command' => 'app:download-tasmota-firmware',
-                'language' => $language,
-            ]);
-
-            try {
-                $command->run($downloadInput, $output);
-            } catch (\Exception $e) {
-            }
+            $this->downloadFirmware($output, $language);
         }
 
         foreach ($ipAddresses as $ipAddress) {
             /** @noinspection PhpUndefinedMethodInspection */
-            $device = $this->deviceRespository->findByIpAddress($ipAddress);
+            $device = $this->deviceRespository->findOneByIpAddress($ipAddress);
 
             $this->deviceHelper->setDevice($device);
 
@@ -83,6 +73,28 @@ class AppUpdateTasmotaFirmwareCommand extends Command
             }
 
             $io->success(sprintf('Successful updated device: %s', $ipAddress));
+        }
+    }
+
+    /**
+     * @param OutputInterface $output
+     * @param                 $language
+     */
+    protected function downloadFirmware(OutputInterface $output, $language): void
+    {
+        $commandName = 'app:download-tasmota-firmware';
+        $command = $this->getApplication()->find($commandName);
+
+        $downloadInput = new ArrayInput(
+            [
+                'command' => $commandName,
+                'language' => $language,
+            ]
+        );
+
+        try {
+            $command->run($downloadInput, $output);
+        } catch (\Exception $e) {
         }
     }
 
