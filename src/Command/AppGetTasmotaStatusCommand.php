@@ -67,6 +67,8 @@ class AppGetTasmotaStatusCommand extends ContainerAwareCommand
                 ->updateStatus()
             ;
         }
+
+        $this->processManager->waitForProcesses();
     }
 
     /**
