@@ -4,15 +4,13 @@ namespace App\Controller;
 
 use App\Repository\DeviceRepository;
 use App\Utils\DeviceHelper;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\RedirectResponse;
-use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
 /**
  * @Route("/")
  */
-class IndexController extends Controller
+class IndexController extends AbstractController
 {
     /**
      * @var DeviceHelper
