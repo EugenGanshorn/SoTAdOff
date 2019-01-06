@@ -6,6 +6,7 @@ use App\Utils\GithubHelper;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
+use Symfony\Component\Routing\Annotation\Route;
 
 class DownloadController extends AbstractController
 {
