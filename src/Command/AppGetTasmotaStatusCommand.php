@@ -69,6 +69,10 @@ class AppGetTasmotaStatusCommand extends ContainerAwareCommand
         }
 
         $this->processManager->waitForProcesses();
+
+        if ($startProcesses) {
+            sleep(1);
+        }
     }
 
     /**
