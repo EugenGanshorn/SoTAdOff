@@ -35,7 +35,7 @@ class ProcessManager
     {
         $this->concurrentCheck();
 
-        $this->processes[] = $process = new Process($commandline, $cwd, $env, $input, $timeout);
+        $this->processes[] = $process = Process::fromShellCommandline($commandline, $cwd, $env, $input, $timeout);
 
         return $process;
     }

@@ -124,6 +124,7 @@ class AppFindTasmotaDevicesCommand extends Command
         $device->setVisible(1);
         $device->setIpAddress($ipAddress);
         $device->setPosition($position);
+        $device->setVisible(true);
 
         return $device;
     }

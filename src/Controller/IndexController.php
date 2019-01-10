@@ -4,15 +4,14 @@ namespace App\Controller;
 
 use App\Repository\DeviceRepository;
 use App\Utils\DeviceHelper;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
 /**
  * @Route("/")
  */
-class IndexController extends Controller
+class IndexController extends AbstractController
 {
     /**
      * @var DeviceHelper
@@ -37,8 +36,7 @@ class IndexController extends Controller
     }
 
     /**
-     * @Route("/{id}", requirements={"id" = "\d+"}, name="toggle")
-     * @Method({"GET"})
+     * @Route("/{id}", requirements={"id" = "\d+"}, name="toggle", methods={"GET"})
      *
      * @param int $id
      *
@@ -59,8 +57,7 @@ class IndexController extends Controller
     }
 
     /**
-     * @Route("/{id}/{color}", requirements={"id" = "\d+", "color" = "^[A-Fa-f0-9]{6}$"}, name="color")
-     * @Method({"GET"})
+     * @Route("/{id}/{color}", requirements={"id" = "\d+", "color" = "^[A-Fa-f0-9]{6}$"}, name="color", methods={"GET"})
      *
      * @param int    $id
      * @param string $color
@@ -82,8 +79,7 @@ class IndexController extends Controller
     }
 
     /**
-     * @Route("/{id}/dimmer/{dimmer}", requirements={"id" = "\d+", "dimmer" = "^[0-9]{1,3}$"}, name="dimmer")
-     * @Method({"GET"})
+     * @Route("/{id}/dimmer/{dimmer}", requirements={"id" = "\d+", "dimmer" = "^[0-9]{1,3}$"}, name="dimmer", methods={"GET"})
      *
      * @param int    $id
      * @param string $dimmer
@@ -105,8 +101,7 @@ class IndexController extends Controller
     }
 
     /**
-     * @Route("/{id}/temperature/{temperature}", requirements={"id" = "\d+", "temperature" = "^[0-9]{3}$"}, name="temperature")
-     * @Method({"GET"})
+     * @Route("/{id}/temperature/{temperature}", requirements={"id" = "\d+", "temperature" = "^[0-9]{3}$"}, name="temperature", methods={"GET"})
      *
      * @param int    $id
      * @param string $temperature
@@ -128,8 +123,7 @@ class IndexController extends Controller
     }
 
     /**
-     * @Route("/{id}/speed/{speed}", requirements={"id" = "\d+", "speed" = "^[0-9]{1,2}$"}, name="speed")
-     * @Method({"GET"})
+     * @Route("/{id}/speed/{speed}", requirements={"id" = "\d+", "speed" = "^[0-9]{1,2}$"}, name="speed", methods={"GET"})
      *
      * @param int    $id
      * @param string $speed

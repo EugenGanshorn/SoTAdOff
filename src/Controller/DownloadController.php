@@ -3,12 +3,12 @@
 namespace App\Controller;
 
 use App\Utils\GithubHelper;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
-class DownloadController extends Controller
+class DownloadController extends AbstractController
 {
     /**
      * @var GithubHelper
