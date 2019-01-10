@@ -79,6 +79,15 @@
 {% endblock %}
 
 {% block body %}
+    <nav class="navbar navbar-expand-sm navbar-dark bg-primary p-0">
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarCollapse">
+            {{ knp_menu_render('main', {'currentClass': 'active', 'template': 'menu.html.twig'}) }}
+        </div>
+    </nav>
+
     <ul class="list-inline d-flex justify-content-between flex-wrap">
     {% for device in devices %}
         {% if device.visible %}

@@ -121,6 +121,7 @@ class AppFindTasmotaDevicesCommand extends Command
     protected function createNewDevice(string $ipAddress, int $position): Device
     {
         $device = new Device();
+        $device->setVisible(1);
         $device->setIpAddress($ipAddress);
         $device->setPosition($position);
 

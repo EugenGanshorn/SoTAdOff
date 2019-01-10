@@ -1,8 +1,84 @@
 easy_admin:
+    design:
+        brand_color: '#007bff'
     list:
         actions: ['show']
     entities:
         Device:
             class: App\Entity\Device
+            form:
+                fields:
+                    - { type: 'tab' , label: 'Allgemeine Informationen', icon: 'user' }
+                    - name
+                    - visible
+                    - { property: ip_address, type: 'text' }
+                    - username
+                    - password
+                    - position
+                    - { type: 'tab' , label: 'Account Information', icon: 'user' }
+                    - module
+                    - { property: friendly_name, type: 'text' }
+                    - topic
+                    - buttonTopic
+                    - power
+                    - { property: power_on_state, type: 'text' }
+                    - { property: led_state, type: 'text' }
+                    - { property: save_data, type: 'text' }
+                    - { property: save_state, type: 'text' }
+                    - { property: button_retain, type: 'text' }
+                    - { property: power_retain, type: 'text' }
+                    - { type: 'tab' , label: 'PRM', icon: 'user' }
+                    - { property: prm_baudrate, type: 'text' }
+                    - { property: prm_group_topic, type: 'text' }
+                    - { property: prm_ota_url, type: 'text' }
+                    - { property: prm_restart_reason, type: 'text', type_options: { disabled: true } }
+                    - { property: prm_sleep, type: 'text' }
+                    - { property: prm_boot_count, type: 'text', type_options: { disabled: true } }
+                    - { property: prm_save_count, type: 'text', type_options: { disabled: true } }
+                    - { property: prm_save_address, type: 'text', type_options: { disabled: true } }
+                    - { type: 'tab' , label: 'Firmware', icon: 'user' }
+                    - { property: fwr_version, type: 'text', type_options: { disabled: true } }
+                    - { property: fwr_build_datetime, type: 'text', type_options: { disabled: true } }
+                    - { property: fwr_boot, type: 'text', type_options: { disabled: true } }
+                    - { type: 'tab' , label: 'Log', icon: 'user' }
+                    - { property: log_serial_log, type: 'text' }
+                    - { property: log_web_log, type: 'text' }
+                    - { property: log_sys_log, type: 'text' }
+                    - { property: log_log_host, type: 'text' }
+                    - { property: log_log_port, type: 'text' }
+                    - { property: log_tele_period, type: 'text' }
+                    - { type: 'tab' , label: 'Netzwerk', icon: 'user' }
+                    - { property: net_hostname, type: 'text' }
+                    - { property: net_ip_address, type: 'text' }
+                    - { property: net_gateway, type: 'text' }
+                    - { property: net_subnetmask, type: 'text' }
+                    - { property: net_dns_server, type: 'text' }
+                    - { property: net_mac, type: 'text', type_options: { disabled: true } }
+                    - { property: net_wifi_config, type: 'text' }
+                    - { type: 'tab' , label: 'MQTT', icon: 'user' }
+                    - { property: mqtt_host, type: 'text' }
+                    - { property: mqtt_port, type: 'text' }
+                    - { property: mqtt_client_mask, type: 'text' }
+                    - { property: mqtt_client, type: 'text' }
+                    - { property: mqtt_user, type: 'text' }
+                    - { property: mqtt_type, type: 'text' }
+                    - { type: 'tab' , label: 'STS', icon: 'user' }
+                    - { property: sts_time, type: 'text', type_options: { disabled: true } }
+                    - { property: sts_uptime, type: 'text', type_options: { disabled: true } }
+                    - { property: sts_vcc, type: 'text', type_options: { disabled: true } }
+                    - { property: sts_power, type: 'text' }
+                    - { property: sts_dimmer, type: 'range', min: 0, max: 100 }
+                    - { property: sts_color, type: 'text' }
+                    - { property: sts_hsb_color, type: 'text' }
+                    - { property: sts_ct, type: 'range', min: 153, max: 500 }
+                    - { property: sts_scheme, type: 'text' }
+                    - { property: sts_fade, type: 'text' }
+                    - { property: sts_speed, type: 'range', min: 1, max: 20 }
+                    - { property: sts_led_table, type: 'checkbox' }
+                    - { type: 'tab' , label: 'WiFi', icon: 'user' }
+                    - { property: wifi_ap, type: 'text', type_options: { disabled: true } }
+                    - { property: wifi_ssid, type: 'text', type_options: { disabled: true } }
+                    - { property: wifi_rssi, type: 'text', type_options: { disabled: true } }
+                    - { property: wifi_ap_mac, type: 'text', type_options: { disabled: true } }
         User:
             class: App\Entity\User

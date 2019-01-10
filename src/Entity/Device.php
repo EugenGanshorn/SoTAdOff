@@ -312,7 +312,7 @@ class Device
     private $stsSpeed;
 
     /**
-     * @ORM\Column(type="integer", nullable=true)
+     * @ORM\Column(type="boolean", nullable=true, options={"default":false})
      */
     private $stsLedTable;
 

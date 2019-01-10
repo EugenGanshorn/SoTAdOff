@@ -18,6 +18,7 @@
         "eugenganshorn/tasmota-http-client": "dev-master",
         "friendsofsymfony/user-bundle": "^2.1",
         "itsjavi/bootstrap-colorpicker": "^2.5",
+        "knplabs/knp-menu-bundle": "^2.2",
         "sensio/framework-extra-bundle": "^5.1",
         "symfony/console": "^4.1",
         "symfony/filesystem": "^4.1",
