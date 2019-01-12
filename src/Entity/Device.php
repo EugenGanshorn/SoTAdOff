@@ -5,7 +5,6 @@ namespace App\Entity;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
-use Doctrine\ORM\Mapping\JoinTable;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\DeviceRepository")
@@ -340,8 +339,7 @@ class Device
     private $wifiApMac;
 
     /**
-     * @ORM\ManyToMany(targetEntity="App\Entity\DeviceGroup", inversedBy="device")
-     * @JoinTable(name="device_group_device")
+     * @ORM\ManyToMany(targetEntity="App\Entity\DeviceGroup", mappedBy="device")
      */
     private $groups;
 

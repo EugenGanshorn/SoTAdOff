@@ -24,7 +24,7 @@ class DeviceGroup
     private $name;
 
     /**
-     * @ORM\ManyToMany(targetEntity="App\Entity\Device", mappedBy="groups")
+     * @ORM\ManyToMany(targetEntity="App\Entity\Device", inversedBy="groups")
      */
     private $devices;
 
