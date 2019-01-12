@@ -11,7 +11,6 @@ use Symfony\Bridge\Doctrine\RegistryInterface;
  * @method Device|null findOneBy(array $criteria, array $orderBy = null)
  * @method Device[]    findAll()
  * @method Device[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
- * @method findByDeviceGroup(int $id)
  */
 class DeviceRepository extends ServiceEntityRepository
 {

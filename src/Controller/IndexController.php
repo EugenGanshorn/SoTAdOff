@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Entity\Device;
 use App\Repository\DeviceGroupRepository;
 use App\Repository\DeviceRepository;
 use App\Utils\DeviceHelper;
@@ -50,122 +51,128 @@ class IndexController extends AbstractController
     }
 
     /**
-     * @Route("/{id}/{type}", requirements={"id" = "\d+"}, name="toggle", methods={"GET"})
+     * @Route("/{type}/{id}/", requirements={"type" = "device|group", "id" = "\d+"}, name="toggle", methods={"GET"})
      *
-     * @param int    $id
      * @param string $type
+     * @param int    $id
      *
      * @return RedirectResponse
      */
-    public function toggle(int $id, string $type = self::DEVICE): RedirectResponse
+    public function toggle(string $type, int $id): RedirectResponse
     {
-        if ($type === static::GROUP) {
-            $devices = $this->deviceRespository->findByDeviceGroup($id);
-        } else {
-            $devices = [$this->deviceRespository->find($id)];
-        }
-
-        foreach ($devices as $device) {
-            if ($device !== null) {
+        $this->forEachDevice(
+            $type,
+            $id,
+            function (Device $device) {
                 $this->deviceHelper
                     ->setDevice($device)
                     ->toggle()
                 ;
             }
-        }
+        );
 
         return $this->redirectToRoute('index');
     }
 
     /**
-     * @Route("/{id}/{color}", requirements={"id" = "\d+", "color" = "^[A-Fa-f0-9]{6}$"}, name="color", methods={"GET"})
+     * @Route("/{type}/{id}/{color}", requirements={"type" = "device|group", "id" = "\d+", "color" = "^[A-Fa-f0-9]{6}$"}, name="color", methods={"GET"})
      *
+     * @param string $type
      * @param int    $id
      * @param string $color
      *
      * @return RedirectResponse
      */
-    public function color(int $id, string $color): RedirectResponse
+    public function color(string $type, int $id, string $color): RedirectResponse
     {
-        $device = $this->deviceRespository->find($id);
-
-        if (null !== $device) {
-            $this->deviceHelper
-                ->setDevice($device)
-                ->setColor(sprintf('#%s', $color))
-            ;
-        }
+        $this->forEachDevice(
+            $type,
+            $id,
+            function (Device $device) use ($color) {
+                $this->deviceHelper
+                    ->setDevice($device)
+                    ->setColor(sprintf('#%s', $color))
+                ;
+            }
+        );
 
         return $this->redirectToRoute('index');
     }
 
     /**
-     * @Route("/{id}/dimmer/{dimmer}", requirements={"id" = "\d+", "dimmer" = "^[0-9]{1,3}$"}, name="dimmer", methods={"GET"})
+     * @Route("/{type}/{id}/dimmer/{dimmer}", requirements={"type" = "device|group", "id" = "\d+", "dimmer" = "^[0-9]{1,3}$"}, name="dimmer", methods={"GET"})
      *
+     * @param string $type
      * @param int    $id
      * @param string $dimmer
      *
      * @return RedirectResponse
      */
-    public function dimmer(int $id, string $dimmer): RedirectResponse
+    public function dimmer(string $type, int $id, string $dimmer): RedirectResponse
     {
-        $device = $this->deviceRespository->find($id);
-
-        if (null !== $device) {
-            $this->deviceHelper
-                ->setDevice($device)
-                ->setDimmer($dimmer)
-            ;
-        }
+        $this->forEachDevice(
+            $type,
+            $id,
+            function (Device $device) use ($dimmer) {
+                $this->deviceHelper
+                    ->setDevice($device)
+                    ->setDimmer($dimmer)
+                ;
+            }
+        );
 
         return $this->redirectToRoute('index');
     }
 
     /**
-     * @Route("/{id}/temperature/{temperature}", requirements={"id" = "\d+", "temperature" = "^[0-9]{3}$"}, name="temperature", methods={"GET"})
+     * @Route("/{type}/{id}/temperature/{temperature}", requirements={"type" = "device|group", "id" = "\d+", "temperature" = "^[0-9]{3}$"}, name="temperature", methods={"GET"})
      *
+     * @param string $type
      * @param int    $id
      * @param string $temperature
      *
      * @return RedirectResponse
      */
-    public function temperature(int $id, string $temperature): RedirectResponse
-
+    public function temperature(string $type, int $id, string $temperature): RedirectResponse
     {
-        $device = $this->deviceRespository->find($id);
-
-        if (null !== $device) {
-            $this->deviceHelper
-                ->setDevice($device)
-                ->setTemperature($temperature)
-            ;
-        }
+        $this->forEachDevice(
+            $type,
+            $id,
+            function (Device $device) use ($temperature) {
+                $this->deviceHelper
+                    ->setDevice($device)
+                    ->setTemperature($temperature)
+                ;
+            }
+        );
 
         return $this->redirectToRoute('index');
     }
 
     /**
-     * @Route("/{id}/speed/{speed}", requirements={"id" = "\d+", "speed" = "^[0-9]{1,2}$"}, name="speed", methods={"GET"})
+     * @Route("/{type}/{id}/speed/{speed}", requirements={"type" = "device|group", "id" = "\d+", "speed" = "^[0-9]{1,2}$"}, name="speed", methods={"GET"})
      *
+     * @param string $type
      * @param int    $id
      * @param string $speed
      *
      * @return RedirectResponse
      */
-    public function speed(int $id, string $speed): RedirectResponse
+    public function speed(string $type, int $id, string $speed): RedirectResponse
     {
-        $device = $this->deviceRespository->find($id);
-
-        if (null !== $device) {
-            $this->deviceHelper
-                ->setDevice($device)
-                ->setSpeed($speed)
-            ;
-        }
+        $this->forEachDevice(
+            $type,
+            $id,
+            function (Device $device) use ($speed) {
+                $this->deviceHelper
+                    ->setDevice($device)
+                    ->setSpeed($speed)
+                ;
+            }
+        );
 
         return $this->redirectToRoute('index');
     }
-
 
     /**
      * @required
@@ -207,5 +214,27 @@ class IndexController extends AbstractController
         $this->deviceHelper = $deviceHelper;
 
         return $this;
+    }
+
+    /**
+     * @param string   $type
+     * @param int      $id
+     * @param \Closure $callback
+     */
+    protected function forEachDevice(string $type, int $id, \Closure $callback): void
+    {
+        if ($type === static::GROUP) {
+            $devices = $this->deviceGroupRepository->find($id)->getDevices();
+        } else {
+            $devices = [$this->deviceRespository->find($id)];
+        }
+
+        foreach ($devices as $device) {
+            if (!$device instanceof Device) {
+                continue;
+            }
+
+            $callback($device);
+        }
     }
 }
