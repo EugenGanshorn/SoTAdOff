@@ -2,6 +2,8 @@
 
 namespace App\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -335,6 +337,16 @@ class Device
      * @ORM\Column(type="string", length=255, nullable=true)
      */
     private $wifiApMac;
+
+    /**
+     * @ORM\ManyToMany(targetEntity="App\Entity\DeviceGroup", mappedBy="device")
+     */
+    private $groups;
+
+    public function __construct()
+    {
+        $this->groups = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -1107,5 +1119,38 @@ class Device
         $this->visible = $visible;
 
         return $this;
+    }
+
+    /**
+     * @return Collection|DeviceGroup[]
+     */
+    public function getGroups(): Collection
+    {
+        return $this->groups;
+    }
+
+    public function addGroup(DeviceGroup $group): self
+    {
+        if (!$this->groups->contains($group)) {
+            $this->groups[] = $group;
+            $group->addDevice($this);
+        }
+
+        return $this;
+    }
+
+    public function removeGroup(DeviceGroup $group): self
+    {
+        if ($this->groups->contains($group)) {
+            $this->groups->removeElement($group);
+            $group->removeDevice($this);
+        }
+
+        return $this;
+    }
+
+    public function __toString()
+    {
+        return $this->getName();
     }
 }

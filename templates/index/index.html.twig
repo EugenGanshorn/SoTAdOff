@@ -89,10 +89,31 @@
     </nav>
 
     <ul class="list-inline d-flex justify-content-between flex-wrap">
+
+    {% for deviceGroup in deviceGroups %}
+        <li class="p-2">
+            <a href="/group/{{ deviceGroup.id }}" role="button" class="btn btn{% if deviceGroup.power == 0 %}-outline{% endif %}-primary btn-lg" style="width: 350px;">
+                <span class="far fa-lightbulb"></span>
+                {{ deviceGroup.name }}
+            </a>
+
+            {% if deviceGroup.module == 26 %}
+                <input type="text" class="form-control colorpicker" value="{{ deviceGroup.stsColor }}" /><br />
+                <input type="range" class="form-control temperature" min="153" max="500" value="{{ deviceGroup.stsCt }}"><br />
+                <input type="range" class="form-control dimmer" min="1" max="100" value="{{ deviceGroup.stsDimmer }}"><br />
+                <input type="range" class="form-control speed" min="1" max="20" value="{{ deviceGroup.stsSpeed }}"><br />
+            {% endif %}
+        </li>
+    {% endfor %}
+
+    </ul>
+
+    <ul class="list-inline d-flex justify-content-between flex-wrap">
+
     {% for device in devices %}
         {% if device.visible %}
             <li class="p-2">
-                <a href="/{{ device.id }}" role="button" class="btn btn{% if device.power == 0 %}-outline{% endif %}-primary btn-lg" style="width: 350px;">
+                <a href="/device/{{ device.id }}" role="button" class="btn btn{% if device.power == 0 %}-outline{% endif %}-primary btn-lg" style="width: 350px;">
                     <span class="far fa-lightbulb"></span>
                     {{ device.name }}
                 </a>

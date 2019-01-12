@@ -82,3 +82,5 @@ easy_admin:
                     - { property: wifi_ap_mac, type: 'text', type_options: { disabled: true } }
         User:
             class: App\Entity\User
+        Group:
+            class: App\Entity\DeviceGroup

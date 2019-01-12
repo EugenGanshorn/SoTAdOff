@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Repository\DeviceGroupRepository;
 use App\Repository\DeviceRepository;
 use App\Utils\DeviceHelper;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -13,6 +14,9 @@ use Symfony\Component\Routing\Annotation\Route;
  */
 class IndexController extends AbstractController
 {
+    public const GROUP = 'group';
+    public const DEVICE = 'device';
+
     /**
      * @var DeviceHelper
      */
@@ -24,33 +28,50 @@ class IndexController extends AbstractController
     protected $deviceRespository;
 
     /**
+     * @var DeviceGroupRepository
+     */
+    protected $deviceGroupRepository;
+
+    /**
      * @Route("/", name="index")
      */
     public function index()
     {
-        $devices = $this->deviceRespository->findAll();
+        $devices = $this->deviceRespository->findBy([], ['module' => 'ASC', 'name' => 'ASC']);
+        $deviceGroups = $this->deviceGroupRepository->findAll();
 
-        return $this->render('index/index.html.twig', [
-            'devices' => $devices,
-        ]);
+        return $this->render(
+            'index/index.html.twig',
+            [
+                'devices'      => $devices,
+                'deviceGroups' => $deviceGroups,
+            ]
+        );
     }
 
     /**
-     * @Route("/{id}", requirements={"id" = "\d+"}, name="toggle", methods={"GET"})
+     * @Route("/{id}/{type}", requirements={"id" = "\d+"}, name="toggle", methods={"GET"})
      *
-     * @param int $id
+     * @param int    $id
+     * @param string $type
      *
      * @return RedirectResponse
      */
-    public function toggle(int $id): RedirectResponse
+    public function toggle(int $id, string $type = self::DEVICE): RedirectResponse
     {
-        $device = $this->deviceRespository->find($id);
+        if ($type === static::GROUP) {
+            $devices = $this->deviceRespository->findByDeviceGroup($id);
+        } else {
+            $devices = [$this->deviceRespository->find($id)];
+        }
 
-        if (null !== $device) {
-            $this->deviceHelper
-                ->setDevice($device)
-                ->toggle()
-            ;
+        foreach ($devices as $device) {
+            if ($device !== null) {
+                $this->deviceHelper
+                    ->setDevice($device)
+                    ->toggle()
+                ;
+            }
         }
 
         return $this->redirectToRoute('index');
@@ -109,6 +130,7 @@ class IndexController extends AbstractController
      * @return RedirectResponse
      */
     public function temperature(int $id, string $temperature): RedirectResponse
+
     {
         $device = $this->deviceRespository->find($id);
 
@@ -144,14 +166,15 @@ class IndexController extends AbstractController
         return $this->redirectToRoute('index');
     }
 
+
     /**
      * @required
      *
      * @param DeviceRepository $deviceRespository
      *
-     * @return IndexController
+     * @return self
      */
-    public function setDeviceRespository(DeviceRepository $deviceRespository): IndexController
+    public function setDeviceRespository(DeviceRepository $deviceRespository): self
     {
         $this->deviceRespository = $deviceRespository;
 
@@ -161,11 +184,25 @@ class IndexController extends AbstractController
     /**
      * @required
      *
+     * @param DeviceGroupRepository $deviceGroupRespository
+     *
+     * @return self
+     */
+    public function setDeviceGroupRespository(DeviceGroupRepository $deviceGroupRespository): self
+    {
+        $this->deviceGroupRepository = $deviceGroupRespository;
+
+        return $this;
+    }
+
+    /**
+     * @required
+     *
      * @param DeviceHelper $deviceHelper
      *
-     * @return IndexController
+     * @return self
      */
-    public function setDeviceHelper(DeviceHelper $deviceHelper): IndexController
+    public function setDeviceHelper(DeviceHelper $deviceHelper): self
     {
         $this->deviceHelper = $deviceHelper;
 
