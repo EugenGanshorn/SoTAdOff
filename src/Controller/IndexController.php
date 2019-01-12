@@ -63,9 +63,8 @@ class IndexController extends AbstractController
         $this->forEachDevice(
             $type,
             $id,
-            function (Device $device) {
-                $this->deviceHelper
-                    ->setDevice($device)
+            function (DeviceHelper $deviceHelper) {
+                $deviceHelper
                     ->toggle()
                 ;
             }
@@ -88,9 +87,8 @@ class IndexController extends AbstractController
         $this->forEachDevice(
             $type,
             $id,
-            function (Device $device) use ($color) {
-                $this->deviceHelper
-                    ->setDevice($device)
+            function (DeviceHelper $deviceHelper) use ($color) {
+                $deviceHelper
                     ->setColor(sprintf('#%s', $color))
                 ;
             }
@@ -113,9 +111,8 @@ class IndexController extends AbstractController
         $this->forEachDevice(
             $type,
             $id,
-            function (Device $device) use ($dimmer) {
-                $this->deviceHelper
-                    ->setDevice($device)
+            function (DeviceHelper $deviceHelper) use ($dimmer) {
+                $deviceHelper
                     ->setDimmer($dimmer)
                 ;
             }
@@ -138,9 +135,8 @@ class IndexController extends AbstractController
         $this->forEachDevice(
             $type,
             $id,
-            function (Device $device) use ($temperature) {
-                $this->deviceHelper
-                    ->setDevice($device)
+            function (DeviceHelper $deviceHelper) use ($temperature) {
+                $deviceHelper
                     ->setTemperature($temperature)
                 ;
             }
@@ -163,9 +159,8 @@ class IndexController extends AbstractController
         $this->forEachDevice(
             $type,
             $id,
-            function (Device $device) use ($speed) {
-                $this->deviceHelper
-                    ->setDevice($device)
+            function (DeviceHelper $deviceHelper) use ($speed) {
+                $deviceHelper
                     ->setSpeed($speed)
                 ;
             }
@@ -234,7 +229,9 @@ class IndexController extends AbstractController
                 continue;
             }
 
-            $callback($device);
+            $this->deviceHelper->setDevice($device);
+
+            $callback($this->deviceHelper);
         }
     }
 }
