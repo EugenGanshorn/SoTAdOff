@@ -81,6 +81,9 @@ class DeviceGroup
         $power = 0;
         foreach ($this->getDevices() as $device) {
             $power += $device->getPower();
+            if ($power > 0) {
+                return 1;
+            }
         }
 
         return $power;
@@ -101,7 +104,7 @@ class DeviceGroup
         return reset($modules);
     }
 
-    public function getStsColor()
+    public function getStsColor(): string
     {
         $stsColor = 0;
         foreach ($this->getDevices() as $device) {
@@ -111,33 +114,56 @@ class DeviceGroup
         return sprintf('#%s', dechex($stsColor / count($this->getDevices())));
     }
 
-    public function getStsDimmer()
+    public function getStsDimmer(): int
     {
         $stsDimmer = 0;
         foreach ($this->getDevices() as $device) {
             $stsDimmer += $device->getStsDimmer();
         }
 
-        return $stsDimmer / count($this->getDevices());
+        return round($stsDimmer / count($this->getDevices()));
     }
 
-    public function getStsSpeed()
+    public function getStsSpeed(): int
     {
         $stsSpeed = 0;
         foreach ($this->getDevices() as $device) {
             $stsSpeed += $device->getStsSpeed();
         }
 
-        return $stsSpeed / count($this->getDevices());
+        return round($stsSpeed / count($this->getDevices()));
     }
 
-    public function getStsCt()
+    public function getStsCt(): int
     {
         $stsCt = 0;
         foreach ($this->getDevices() as $device) {
             $stsCt += $device->getStsCt();
         }
 
-        return $stsCt / count($this->getDevices());
+        return round($stsCt / count($this->getDevices()));
+    }
+
+    public function getStsScheme(): int
+    {
+        $stsScheme = 0;
+        foreach ($this->getDevices() as $device) {
+            $stsScheme += $device->getStsScheme();
+        }
+
+        return round($stsScheme / count($this->getDevices()));
+    }
+
+    public function getStsFade(): int
+    {
+        $fade = 0;
+        foreach ($this->getDevices() as $device) {
+            $fade += $device->getStsFade();
+            if ($fade > 0) {
+                return 1;
+            }
+        }
+
+        return $fade;
     }
 }

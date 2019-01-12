@@ -98,6 +98,13 @@ class DeviceHelper
         $this->updateStatus();
     }
 
+    public function setScheme(int $scheme): void
+    {
+        $this->prepareRequest();
+        $this->request->Scheme($scheme);
+        $this->updateStatus();
+    }
+
     public function setLedTable(bool $ledTable): void
     {
         $this->prepareRequest();

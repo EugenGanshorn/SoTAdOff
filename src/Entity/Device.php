@@ -1097,12 +1097,12 @@ class Device
         return $this;
     }
 
-    public function getStsLedTable(): ?int
+    public function getStsLedTable(): ?bool
     {
         return $this->stsLedTable;
     }
 
-    public function setStsLedTable(?int $stsLedTable): self
+    public function setStsLedTable(?bool $stsLedTable): self
     {
         $this->stsLedTable = $stsLedTable;
 

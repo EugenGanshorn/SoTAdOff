@@ -74,6 +74,16 @@
                 .on('change', function (e) {
                     window.location.href = $(this).siblings('a')[0].href + "/speed/" + $(this).val();
                 });
+
+            $('.scheme')
+                .on('change', function (e) {
+                    window.location.href = $(this).siblings('a')[0].href + "/scheme/" + $(this).val();
+                });
+
+            $('.sonoff-fade')
+                .on('change', function (e) {
+                    window.location.href = $(this).siblings('a')[0].href + "/fade/" + ($(this).prop("checked") ? 1 : 0);
+                });
         });
     </script>
 {% endblock %}
@@ -102,6 +112,14 @@
                 <input type="range" class="form-control temperature" min="153" max="500" value="{{ deviceGroup.stsCt }}"><br />
                 <input type="range" class="form-control dimmer" min="1" max="100" value="{{ deviceGroup.stsDimmer }}"><br />
                 <input type="range" class="form-control speed" min="1" max="20" value="{{ deviceGroup.stsSpeed }}"><br />
+                <input type="checkbox" class="form-control sonoff-fade" value="{{ deviceGroup.stsFade }}"{% if deviceGroup.stsFade == 1 %} checked="checked"{% endif %} /><br />
+                <select class="form-control scheme">
+                    <option value="0"{% if deviceGroup.stsScheme == 0 %} selected="selected"{% endif %}>Standard</option>
+                    <option value="1"{% if deviceGroup.stsScheme == 1 %} selected="selected"{% endif %}>Aufwachen</option>
+                    <option value="2"{% if deviceGroup.stsScheme == 2 %} selected="selected"{% endif %}>RGB</option>
+                    <option value="3"{% if deviceGroup.stsScheme == 3 %} selected="selected"{% endif %}>RBG</option>
+                    <option value="4"{% if deviceGroup.stsScheme == 4 %} selected="selected"{% endif %}>Zufall</option>
+                </select>
             {% endif %}
         </li>
     {% endfor %}
@@ -123,6 +141,14 @@
                     <input type="range" class="form-control temperature" min="153" max="500" value="{{ device.stsCt }}"><br />
                     <input type="range" class="form-control dimmer" min="1" max="100" value="{{ device.stsDimmer }}"><br />
                     <input type="range" class="form-control speed" min="1" max="20" value="{{ device.stsSpeed }}"><br />
+                    <input type="checkbox" class="form-control sonoff-fade" value="{{ device.stsFade }}"{% if device.stsFade == 1 %} checked="checked"{% endif %} /><br />
+                    <select class="form-control scheme">
+                        <option value="0"{% if device.stsScheme == 0 %} selected="selected"{% endif %}>Standard</option>
+                        <option value="1"{% if device.stsScheme == 1 %} selected="selected"{% endif %}>Aufwachen</option>
+                        <option value="2"{% if device.stsScheme == 2 %} selected="selected"{% endif %}>RGB</option>
+                        <option value="3"{% if device.stsScheme == 3 %} selected="selected"{% endif %}>RBG</option>
+                        <option value="4"{% if device.stsScheme == 4 %} selected="selected"{% endif %}>Zufall</option>
+                    </select>
                 {% endif %}
             </li>
         {% endif %}

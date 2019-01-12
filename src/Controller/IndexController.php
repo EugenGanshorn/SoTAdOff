@@ -65,8 +65,7 @@ class IndexController extends AbstractController
             $id,
             function (DeviceHelper $deviceHelper) {
                 $deviceHelper
-                    ->toggle()
-                ;
+                    ->toggle();
             }
         );
 
@@ -89,8 +88,7 @@ class IndexController extends AbstractController
             $id,
             function (DeviceHelper $deviceHelper) use ($color) {
                 $deviceHelper
-                    ->setColor(sprintf('#%s', $color))
-                ;
+                    ->setColor(sprintf('#%s', $color));
             }
         );
 
@@ -113,8 +111,7 @@ class IndexController extends AbstractController
             $id,
             function (DeviceHelper $deviceHelper) use ($dimmer) {
                 $deviceHelper
-                    ->setDimmer($dimmer)
-                ;
+                    ->setDimmer($dimmer);
             }
         );
 
@@ -137,8 +134,7 @@ class IndexController extends AbstractController
             $id,
             function (DeviceHelper $deviceHelper) use ($temperature) {
                 $deviceHelper
-                    ->setTemperature($temperature)
-                ;
+                    ->setTemperature($temperature);
             }
         );
 
@@ -161,8 +157,53 @@ class IndexController extends AbstractController
             $id,
             function (DeviceHelper $deviceHelper) use ($speed) {
                 $deviceHelper
-                    ->setSpeed($speed)
-                ;
+                    ->setSpeed($speed);
+            }
+        );
+
+        return $this->redirectToRoute('index');
+    }
+
+    /**
+     * @Route("/{type}/{id}/scheme/{scheme}", requirements={"type" = "device|group", "id" = "\d+", "scheme" = "\d"}, name="scheme", methods={"GET"})
+     *
+     * @param string $type
+     * @param int    $id
+     * @param int    $scheme
+     *
+     * @return RedirectResponse
+     */
+    public function scheme(string $type, int $id, int $scheme): RedirectResponse
+    {
+        $this->forEachDevice(
+            $type,
+            $id,
+            function (DeviceHelper $deviceHelper) use ($scheme) {
+                $deviceHelper
+                    ->setScheme($scheme);
+            }
+        );
+
+        return $this->redirectToRoute('index');
+    }
+
+    /**
+     * @Route("/{type}/{id}/fade/{fade}", requirements={"type" = "device|group", "id" = "\d+", "fade" = "^[0-1]{1}$"}, name="fade", methods={"GET"})
+     *
+     * @param string $type
+     * @param int    $id
+     * @param bool   $fade
+     *
+     * @return RedirectResponse
+     */
+    public function fade(string $type, int $id, bool $fade): RedirectResponse
+    {
+        $this->forEachDevice(
+            $type,
+            $id,
+            function (DeviceHelper $deviceHelper) use ($fade) {
+                $deviceHelper
+                    ->setFade($fade);
             }
         );
 
