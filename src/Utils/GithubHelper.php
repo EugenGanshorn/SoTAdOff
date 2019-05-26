@@ -36,6 +36,9 @@ class GithubHelper
         );
     }
 
+    /**
+     * @param string $language
+     */
     public function downloadFirmware(string $language): void
     {
         $result = $this->getLatest();
@@ -48,7 +51,10 @@ class GithubHelper
         }
     }
 
-    public function getLatest()
+    /**
+     * @return array
+     */
+    public function getLatest(): array
     {
         $response = $this->client->get('https://api.github.com/repos/arendst/Sonoff-Tasmota/releases/latest');
 
@@ -60,6 +66,9 @@ class GithubHelper
         $this->filesystem->mkdir($this->getFirmwareDir());
     }
 
+    /**
+     * @return string
+     */
     protected function getFirmwareDir(): string
     {
         return sprintf(
@@ -69,10 +78,10 @@ class GithubHelper
     }
 
     /**
-     * @param $assetName
-     * @param $downloadUrl
+     * @param string $assetName
+     * @param string $downloadUrl
      */
-    protected function downloadFile($assetName, $downloadUrl): void
+    protected function downloadFile(string $assetName, string $downloadUrl): void
     {
         $filePath = $this->getFilePath($assetName);
         $this->createFirmwareDir();

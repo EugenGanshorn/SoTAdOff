@@ -124,9 +124,9 @@ class DeviceHelper
         $this->request->Upgrade(1);
     }
 
-    public function updateStatus(): void
+    public function updateStatus(int $timeout = 5): void
     {
-        $status = $this->getStatus();
+        $status = $this->getStatus(['timeout' => $timeout]);
         $this->persistStatus($status);
     }
 

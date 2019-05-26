@@ -47,6 +47,13 @@ class AppUpdateTasmotaFirmwareCommand extends Command
         ;
     }
 
+    /**
+     * @param InputInterface  $input
+     * @param OutputInterface $output
+     *
+     * @return int|void|null
+     * @throws \Symfony\Component\Console\Exception\ExceptionInterface
+     */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $io = new SymfonyStyle($input, $output);
@@ -84,6 +91,8 @@ class AppUpdateTasmotaFirmwareCommand extends Command
     /**
      * @param OutputInterface $output
      * @param                 $language
+     *
+     * @throws \Symfony\Component\Console\Exception\ExceptionInterface
      */
     protected function downloadFirmware(OutputInterface $output, $language): void
     {

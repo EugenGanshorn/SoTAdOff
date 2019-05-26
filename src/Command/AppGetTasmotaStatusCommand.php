@@ -41,6 +41,7 @@ class AppGetTasmotaStatusCommand extends ContainerAwareCommand
         $this
             ->setDescription('get tasmota status from all devices')
             ->addOption('device', 'd', InputArgument::OPTIONAL, 'ip address')
+            ->addOption('timeout', 't', InputOption::VALUE_OPTIONAL, 'timeout', 1)
         ;
     }
 
@@ -64,7 +65,7 @@ class AppGetTasmotaStatusCommand extends ContainerAwareCommand
 
             $this->deviceHelper
                 ->setDevice($device)
-                ->updateStatus()
+                ->updateStatus($input->getOption('timeout'))
             ;
         }
 
