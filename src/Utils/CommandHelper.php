@@ -51,7 +51,7 @@ class CommandHelper
     public function buildCommand(string $commandName, InputInterface $input): string
     {
         return sprintf(
-            'bin/console %s %s %s',
+            'timeout 30s bin/console %s %s %s',
             $commandName,
             implode(' ', $this->createCommandArguments($input)),
             implode(' ', $this->createCommandOptions($input))
