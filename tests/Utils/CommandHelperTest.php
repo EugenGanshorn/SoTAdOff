@@ -22,6 +22,6 @@ class CommandHelperTest extends TestCase
         ]);
 
         $input = new ArrayInput(['--foo' => 'bar', 'name1' => 'test', 'name2' => 'foo'], $definition);
-        $this->assertEquals('bin/console test:foo:bar foo --foo=bar', $sut->buildCommand('test:foo:bar', $input));
+        $this->assertEquals('timeout 30s bin/console test:foo:bar foo --foo=bar', $sut->buildCommand('test:foo:bar', $input));
     }
 }

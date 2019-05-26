@@ -44,7 +44,7 @@ class DeviceHelperTest extends TestCase
 
         $request->expects($this->once())
             ->method('__call')
-            ->with('Status', [0, []])
+            ->with('Status', [0, ['timeout' => 42]])
             ->willReturn(['foo' => 'bar'])
         ;
 
@@ -53,7 +53,7 @@ class DeviceHelperTest extends TestCase
         $sut->setUrl($url);
         $sut->setRequest($request);
 
-        $this->assertEquals(['foo' => 'bar'], $sut->getStatus());
+        $this->assertEquals(['foo' => 'bar'], $sut->getStatus(['timeout' => 42]));
     }
 
     public function testToggle(): void
@@ -90,7 +90,7 @@ class DeviceHelperTest extends TestCase
             ->method('__call')
             ->withConsecutive(
                 ['Power', [2]],
-                ['Status', [0, []]]
+                ['Status', [0, ['timeout' => 5]]]
             )
             ->will($this->onConsecutiveCalls(
                 ['foo' => 'bar'],
