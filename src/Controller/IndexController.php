@@ -60,14 +60,16 @@ class IndexController extends AbstractController
      */
     public function toggle(string $type, int $id): RedirectResponse
     {
-        $this->forEachDevice(
-            $type,
-            $id,
-            function (DeviceHelper $deviceHelper) {
-                $deviceHelper
-                    ->toggle();
-            }
-        );
+        $this
+            ->forEachDevice(
+                $type,
+                $id,
+                function (DeviceHelper $deviceHelper) {
+                    $deviceHelper
+                        ->toggle();
+                }
+            )
+        ;
 
         return $this->redirectToRoute('index');
     }
@@ -256,8 +258,10 @@ class IndexController extends AbstractController
      * @param string   $type
      * @param int      $id
      * @param \Closure $callback
+     *
+     * @return IndexController
      */
-    protected function forEachDevice(string $type, int $id, \Closure $callback): void
+    protected function forEachDevice(string $type, int $id, \Closure $callback): self
     {
         if ($type === static::GROUP) {
             $devices = $this->deviceGroupRepository->find($id)->getDevices();
@@ -265,14 +269,21 @@ class IndexController extends AbstractController
             $devices = [$this->deviceRespository->find($id)];
         }
 
+        $this->deviceHelper->startBulk();
+
         foreach ($devices as $device) {
             if (!$device instanceof Device) {
                 continue;
             }
 
-            $this->deviceHelper->setDevice($device);
+            $deviceHelper = clone $this->deviceHelper;
+            $deviceHelper->setDevice($device);
 
-            $callback($this->deviceHelper);
+            $callback($deviceHelper);
         }
+
+        $this->deviceHelper->finishBulk();
+
+        return $this;
     }
 }
