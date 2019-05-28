@@ -330,6 +330,6 @@ class DeviceHelper
 
     public function finishBulk()
     {
-        $this->request->waitForOpenAsyncRquests();
+        $this->request->finishAsyncRquests();
     }
 }
