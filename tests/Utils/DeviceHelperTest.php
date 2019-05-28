@@ -44,7 +44,7 @@ class DeviceHelperTest extends TestCase
 
         $request->expects($this->once())
             ->method('__call')
-            ->with('Status', [0, ['timeout' => 42]])
+            ->with('Status', [0, ['timeout' => 42], null])
             ->willReturn(['foo' => 'bar'])
         ;
 
@@ -62,7 +62,7 @@ class DeviceHelperTest extends TestCase
             ->getMock()
         ;
 
-        $device->expects($this->exactly(2))
+        $device->expects($this->exactly(1))
             ->method('getIpAddress')
             ->willReturn('localhost')
         ;
@@ -71,7 +71,7 @@ class DeviceHelperTest extends TestCase
             ->getMock()
         ;
 
-        $url->expects($this->exactly(2))
+        $url->expects($this->exactly(1))
             ->method('setIpAddress')
             ->with('localhost')
             ->willReturnSelf()
@@ -81,30 +81,18 @@ class DeviceHelperTest extends TestCase
             ->getMock()
         ;
 
-        $request->expects($this->exactly(2))
+        $request->expects($this->exactly(1))
             ->method('getUrl')
             ->willReturn($url)
         ;
 
-        $request->expects($this->exactly(2))
+        $request->expects($this->exactly(1))
             ->method('__call')
             ->withConsecutive(
-                ['Power', [2]],
-                ['Status', [0, ['timeout' => 5]]]
+                ['Power', [2, [], function () {}]],
             )
             ->will($this->onConsecutiveCalls(
                 ['foo' => 'bar'],
-                [
-                    'Status' => ['FriendlyName' => []],
-                    'StatusSTS' => [
-                        'Wifi' => [],
-                    ],
-                    'StatusMQT' => [],
-                    'StatusNET' => [],
-                    'StatusLOG' => [],
-                    'StatusPRM' => [],
-                    'StatusFWR' => [],
-                ]
             ))
         ;
 
