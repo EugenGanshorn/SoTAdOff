@@ -41,75 +41,85 @@ class DeviceHelper
      */
     protected $device;
 
-    public function getStatus(array $options = []): array
+    public function getStatus(array $options = [], \Closure $callback = null): array
     {
         $this->prepareRequest();
 
-        return $this->request->Status(0, $options);
+        return $this->request->Status(0, $options, $callback);
     }
 
     public function toggle(): void
     {
         $this->prepareRequest();
-        $this->request->Power(2);
-        $this->updateStatus();
+        $this->request->Power(2, [], function () {
+            $this->updateStatus();
+        });
     }
 
     public function wakeup(?int $duration = 3600, ?int $wakeup = 100): void
     {
         $this->prepareRequest();
-        $this->request->WakeupDuration($duration);
-        $this->request->Wakeup($wakeup);
-        $this->updateStatus();
+        $this->request->WakeupDuration($duration, [], function () use ($wakeup) {
+            $this->request->Wakeup($wakeup, [], function () {
+                $this->updateStatus();
+            });
+        });
     }
 
     public function setColor(string $color): void
     {
         $this->prepareRequest();
-        $this->request->Color($color);
-        $this->updateStatus();
+        $this->request->Color($color, [], function () {
+            $this->updateStatus();
+        });
     }
 
     public function setTemperature(int $temperature): void
     {
         $this->prepareRequest();
-        $this->request->CT($temperature);
-        $this->updateStatus();
+        $this->request->CT($temperature, [], function () {
+            $this->updateStatus();
+        });
     }
 
     public function setDimmer(int $dimmer): void
     {
         $this->prepareRequest();
-        $this->request->Dimmer($dimmer);
-        $this->updateStatus();
+        $this->request->Dimmer($dimmer, [], function () {
+            $this->updateStatus();
+        });
     }
 
     public function setFade(bool $fade): void
     {
         $this->prepareRequest();
-        $this->request->Fade($fade);
-        $this->updateStatus();
+        $this->request->Fade($fade, [], function () {
+            $this->updateStatus();
+        });
     }
 
     public function setSpeed(int $speed): void
     {
         $this->prepareRequest();
-        $this->request->Speed($speed);
-        $this->updateStatus();
+        $this->request->Speed($speed, [], function () {
+            $this->updateStatus();
+        });
     }
 
     public function setScheme(int $scheme): void
     {
         $this->prepareRequest();
-        $this->request->Scheme($scheme);
-        $this->updateStatus();
+        $this->request->Scheme($scheme, [], function () {
+            $this->updateStatus();
+        });
     }
 
     public function setLedTable(bool $ledTable): void
     {
         $this->prepareRequest();
-        $this->request->LedTable($ledTable);
-        $this->updateStatus();
+        $this->request->LedTable($ledTable, [], function () {
+            $this->updateStatus();
+        });
     }
 
     public function setOtaUrl(string $otaUrl): void
@@ -126,8 +136,9 @@ class DeviceHelper
 
     public function updateStatus(int $timeout = 5): void
     {
-        $status = $this->getStatus(['timeout' => $timeout]);
-        $this->persistStatus($status);
+        $this->getStatus(['timeout' => $timeout], function (array $status) {
+            $this->persistStatus($status);
+        });
     }
 
     public function isExists(int $timeout = 1): bool
@@ -310,5 +321,15 @@ class DeviceHelper
         $this->serializer = $serializer;
 
         return $this;
+    }
+
+    public function startBulk()
+    {
+        $this->request->startAsyncRequests();
+    }
+
+    public function finishBulk()
+    {
+        $this->request->finishAsyncRquests();
     }
 }

@@ -23,11 +23,11 @@ class GithubHelper
     protected $projectDir;
 
     /**
-     * @param $assetName
+     * @param string $assetName
      *
      * @return string
      */
-    public function getFilePath($assetName): string
+    public function getFilePath(string $assetName): string
     {
         return sprintf(
             '%s/%s',

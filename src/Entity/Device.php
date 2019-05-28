@@ -339,7 +339,7 @@ class Device
     private $wifiApMac;
 
     /**
-     * @ORM\ManyToMany(targetEntity="App\Entity\DeviceGroup", mappedBy="device")
+     * @ORM\ManyToMany(targetEntity="App\Entity\DeviceGroup", mappedBy="devices")
      */
     private $groups;
 
