@@ -1457,16 +1457,16 @@
         },
         {
             "name": "eugenganshorn/tasmota-http-client",
-            "version": "v1.0.0",
+            "version": "v1.0.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/EugenGanshorn/TasmotaHttpClient.git",
-                "reference": "7c8a25be37e7e3817a8b851aabebc7ce14a0d432"
+                "reference": "8c0adbdfb025aea8ccc117322b7779fc5e466e64"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/EugenGanshorn/TasmotaHttpClient/zipball/7c8a25be37e7e3817a8b851aabebc7ce14a0d432",
-                "reference": "7c8a25be37e7e3817a8b851aabebc7ce14a0d432",
+                "url": "https://api.github.com/repos/EugenGanshorn/TasmotaHttpClient/zipball/8c0adbdfb025aea8ccc117322b7779fc5e466e64",
+                "reference": "8c0adbdfb025aea8ccc117322b7779fc5e466e64",
                 "shasum": ""
             },
             "require": {
@@ -1493,7 +1493,7 @@
                     "email": "eugen@ganshorn.eu"
                 }
             ],
-            "time": "2019-05-28T19:54:41+00:00"
+            "time": "2019-05-29T05:53:37+00:00"
         },
         {
             "name": "friendsofsymfony/user-bundle",
