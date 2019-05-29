@@ -136,7 +136,7 @@
                     {{ device.name }}
                 </a>
 
-                {% if device.module == 26 %}
+                {% if ((device.module == 26) or (device.id == 30)) %}
                     <input type="text" class="form-control colorpicker" value="{{ device.stsColor }}" /><br />
                     <input type="range" class="form-control temperature" min="153" max="500" value="{{ device.stsCt }}"><br />
                     <input type="range" class="form-control dimmer" min="1" max="100" value="{{ device.stsDimmer }}"><br />
