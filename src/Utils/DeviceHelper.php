@@ -41,6 +41,11 @@ class DeviceHelper
      */
     protected $device;
 
+    /**
+     * @var bool
+     */
+    protected $inBulk;
+
     public function getStatus(array $options = [], \Closure $callback = null): array
     {
         $this->prepareRequest();
@@ -54,6 +59,7 @@ class DeviceHelper
         $this->request->Power(2, [], function () {
             $this->updateStatus();
         });
+        $this->finishRequest();
     }
 
     public function wakeup(?int $duration = 3600, ?int $wakeup = 100): void
@@ -64,6 +70,7 @@ class DeviceHelper
                 $this->updateStatus();
             });
         });
+        $this->finishRequest();
     }
 
     public function setColor(string $color): void
@@ -72,6 +79,7 @@ class DeviceHelper
         $this->request->Color($color, [], function () {
             $this->updateStatus();
         });
+        $this->finishRequest();
     }
 
     public function setTemperature(int $temperature): void
@@ -80,6 +88,7 @@ class DeviceHelper
         $this->request->CT($temperature, [], function () {
             $this->updateStatus();
         });
+        $this->finishRequest();
     }
 
     public function setDimmer(int $dimmer): void
@@ -88,6 +97,7 @@ class DeviceHelper
         $this->request->Dimmer($dimmer, [], function () {
             $this->updateStatus();
         });
+        $this->finishRequest();
     }
 
     public function setFade(bool $fade): void
@@ -96,6 +106,7 @@ class DeviceHelper
         $this->request->Fade($fade, [], function () {
             $this->updateStatus();
         });
+        $this->finishRequest();
     }
 
     public function setSpeed(int $speed): void
@@ -104,6 +115,7 @@ class DeviceHelper
         $this->request->Speed($speed, [], function () {
             $this->updateStatus();
         });
+        $this->finishRequest();
     }
 
     public function setScheme(int $scheme): void
@@ -112,6 +124,7 @@ class DeviceHelper
         $this->request->Scheme($scheme, [], function () {
             $this->updateStatus();
         });
+        $this->finishRequest();
     }
 
     public function setLedTable(bool $ledTable): void
@@ -120,6 +133,7 @@ class DeviceHelper
         $this->request->LedTable($ledTable, [], function () {
             $this->updateStatus();
         });
+        $this->finishRequest();
     }
 
     public function setOtaUrl(string $otaUrl): void
@@ -139,6 +153,7 @@ class DeviceHelper
         $this->getStatus(['timeout' => $timeout], function (array $status) {
             $this->persistStatus($status);
         });
+        $this->finishRequest();
     }
 
     public function isExists(int $timeout = 1): bool
@@ -187,6 +202,25 @@ class DeviceHelper
 
         $this->entityManager->persist($this->device);
         $this->entityManager->flush();
+    }
+
+    public function startBulk()
+    {
+        $this->inBulk = true;
+        $this->request->startAsyncRequests();
+    }
+
+    public function finishBulk()
+    {
+        $this->request->finishAsyncRquests();
+        $this->inBulk = false;
+    }
+
+    protected function finishRequest()
+    {
+        if (!$this->inBulk) {
+            $this->request->finishAsyncRquests();
+        }
     }
 
     /**
@@ -321,15 +355,5 @@ class DeviceHelper
         $this->serializer = $serializer;
 
         return $this;
-    }
-
-    public function startBulk()
-    {
-        $this->request->startAsyncRequests();
-    }
-
-    public function finishBulk()
-    {
-        $this->request->finishAsyncRquests();
     }
 }

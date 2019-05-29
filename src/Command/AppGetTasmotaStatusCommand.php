@@ -48,55 +48,24 @@ class AppGetTasmotaStatusCommand extends ContainerAwareCommand
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $startProcesses = false;
         $ipAddress = $input->getOption('device');
         if ($input->hasOption('device') && null !== $ipAddress) {
             /** @noinspection PhpUndefinedMethodInspection */
             $devices = [$this->deviceRespository->findOneByIpAddress($ipAddress)];
         } else {
             $devices = $this->deviceRespository->findAll();
-            $startProcesses = true;
         }
 
-        foreach ($devices as $device) {
-            if ($startProcesses) {
-                $this->startProcess($input, $device->getIpAddress());
-                continue;
-            }
+        $this->deviceHelper->startBulk();
 
+        foreach ($devices as $device) {
             $this->deviceHelper
                 ->setDevice($device)
                 ->updateStatus($input->getOption('timeout'))
             ;
         }
 
-        $this->processManager->waitForProcesses();
-
-        if ($startProcesses) {
-            sleep(1);
-        }
-    }
-
-    /**
-     * @param $input
-     * @param $ipAddress
-     *
-     * @return Process
-     */
-    protected function startProcess(InputInterface $input, string $ipAddress): Process
-    {
-        $commandName = $this->getName();
-        $newInput = clone $input;
-        $newInput->setOption('device', $ipAddress);
-
-        $process = $this->processManager->createNewProcess($this->commandHelper->buildCommand($commandName, $newInput));
-        $process->start(
-            function ($type, $buffer) {
-                echo $buffer;
-            }
-        );
-
-        return $process;
+        $this->deviceHelper->finishBulk();
     }
 
     /**
@@ -123,20 +92,6 @@ class AppGetTasmotaStatusCommand extends ContainerAwareCommand
     public function setDeviceRespository(DeviceRepository $deviceRespository): AppGetTasmotaStatusCommand
     {
         $this->deviceRespository = $deviceRespository;
-
-        return $this;
-    }
-
-    /**
-     * @required
-     *
-     * @param ProcessManager $processManager
-     *
-     * @return AppGetTasmotaStatusCommand
-     */
-    public function setProcessManager(ProcessManager $processManager): AppGetTasmotaStatusCommand
-    {
-        $this->processManager = $processManager;
 
         return $this;
     }
