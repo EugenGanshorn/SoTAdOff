@@ -62,9 +62,10 @@ class AppGetTasmotaStatusCommand extends Command implements LoggerAwareInterface
         $this->deviceHelper->startBulk();
 
         foreach ($devices as $device) {
-                $this->deviceHelper
-                    ->setDevice($device)
-                    ->updateStatus($input->getOption('timeout'));
+            $deviceHelper = clone $this->deviceHelper;
+            $deviceHelper
+                ->setDevice($device)
+                ->updateStatus($input->getOption('timeout'));
         }
 
         $this->deviceHelper->finishBulk();
