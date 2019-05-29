@@ -6,15 +6,18 @@ use App\Repository\DeviceRepository;
 use App\Utils\CommandHelper;
 use App\Utils\DeviceHelper;
 use App\Utils\ProcessManager;
-use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
+use Psr\Log\LoggerAwareInterface;
+use Psr\Log\LoggerAwareTrait;
+use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\Process\Process;
 
-class AppGetTasmotaStatusCommand extends ContainerAwareCommand
+class AppGetTasmotaStatusCommand extends Command implements LoggerAwareInterface
 {
+    use LoggerAwareTrait;
+
     protected static $defaultName = 'app:get-tasmota-status';
 
     /**
@@ -59,10 +62,13 @@ class AppGetTasmotaStatusCommand extends ContainerAwareCommand
         $this->deviceHelper->startBulk();
 
         foreach ($devices as $device) {
-            $this->deviceHelper
-                ->setDevice($device)
-                ->updateStatus($input->getOption('timeout'))
-            ;
+            try {
+                $this->deviceHelper
+                    ->setDevice($device)
+                    ->updateStatus($input->getOption('timeout'));
+            } catch (\Exception $exception) {
+                $this->logger->error('failed to update status for device {device}', ['device' => $device->getIpAddress()]);
+            }
         }
 
         $this->deviceHelper->finishBulk();
