@@ -6,6 +6,7 @@ use App\Entity\Device;
 use App\Repository\DeviceGroupRepository;
 use App\Repository\DeviceRepository;
 use App\Utils\DeviceHelper;
+use App\Utils\DeviceHelperFactory;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\Routing\Annotation\Route;
@@ -19,9 +20,9 @@ class IndexController extends AbstractController
     public const DEVICE = 'device';
 
     /**
-     * @var DeviceHelper
+     * @var DeviceHelperFactory
      */
-    protected $deviceHelper;
+    protected $deviceHelperFactory;
 
     /**
      * @var DeviceRepository
@@ -243,13 +244,13 @@ class IndexController extends AbstractController
     /**
      * @required
      *
-     * @param DeviceHelper $deviceHelper
+     * @param DeviceHelperFactory $deviceHelperFactory
      *
      * @return self
      */
-    public function setDeviceHelper(DeviceHelper $deviceHelper): self
+    public function setDeviceHelperFactory(DeviceHelperFactory $deviceHelperFactory): self
     {
-        $this->deviceHelper = $deviceHelper;
+        $this->deviceHelperFactory = $deviceHelperFactory;
 
         return $this;
     }
@@ -269,20 +270,22 @@ class IndexController extends AbstractController
             $devices = [$this->deviceRespository->find($id)];
         }
 
-        $this->deviceHelper->startBulk();
-
+        $deviceHelpers = [];
         foreach ($devices as $device) {
             if (!$device instanceof Device) {
                 continue;
             }
 
-            $deviceHelper = clone $this->deviceHelper;
+            $deviceHelpers[] = $deviceHelper = $this->deviceHelperFactory->create();
+            $deviceHelper->startBulk();
             $deviceHelper->setDevice($device);
 
             $callback($deviceHelper);
         }
 
-        $this->deviceHelper->finishBulk();
+        foreach ($deviceHelpers as $deviceHelper) {
+            $deviceHelper->finishBulk();
+        }
 
         return $this;
     }

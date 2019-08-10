@@ -4,7 +4,10 @@ namespace App\Command;
 
 use App\Repository\DeviceRepository;
 use App\Utils\DeviceHelper;
+use App\Utils\DeviceHelperFactory;
+use Exception;
 use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Exception\ExceptionInterface;
 use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -18,9 +21,9 @@ class AppUpdateTasmotaFirmwareCommand extends Command
     protected static $defaultName = 'app:update-tasmota-firmware';
 
     /**
-     * @var DeviceHelper
+     * @var DeviceHelperFactory
      */
-    protected $deviceHelper;
+    protected $deviceHelperFactory;
 
     /**
      * @var DeviceRepository
@@ -31,11 +34,6 @@ class AppUpdateTasmotaFirmwareCommand extends Command
      * @var UrlGeneratorInterface
      */
     protected $router;
-
-    /**
-     * @var AppDownloadTasmotaFirmwareCommand
-     */
-    protected $appDownloadTasmotaFirmwareCommand;
 
     protected function configure()
     {
@@ -52,7 +50,7 @@ class AppUpdateTasmotaFirmwareCommand extends Command
      * @param OutputInterface $output
      *
      * @return int|void|null
-     * @throws \Symfony\Component\Console\Exception\ExceptionInterface
+     * @throws ExceptionInterface
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
@@ -65,11 +63,13 @@ class AppUpdateTasmotaFirmwareCommand extends Command
             $this->downloadFirmware($output, $language);
         }
 
+        $deviceHelpers = [];
         foreach ($ipAddresses as $ipAddress) {
-            /** @noinspection PhpUndefinedMethodInspection */
             $device = $this->deviceRespository->findOneByIpAddress($ipAddress);
 
-            $this->deviceHelper->setDevice($device);
+            $deviceHelpers[] = $deviceHelper = $this->deviceHelperFactory->create();
+            $deviceHelper->startBulk();
+            $deviceHelper->setDevice($device);
 
             foreach (['minimal', $language] as $otaUrl) {
                 $otaUrl = $this->router->generate(
@@ -78,13 +78,19 @@ class AppUpdateTasmotaFirmwareCommand extends Command
                     UrlGeneratorInterface::ABSOLUTE_URL
                 );
 
-                $sucessful = $this->deviceHelper->doUpgrade($otaUrl);
-                if (!$sucessful) {
+                $successful = $deviceHelper->doUpgrade($otaUrl);
+                if (!$successful) {
                     break;
                 }
             }
 
-            $io->success(sprintf('Successful updated device: %s', $ipAddress));
+            $deviceHelper->updateStatus();
+
+            $io->success(sprintf('Successful updated device: %s, new fwr version is %s', $ipAddress, $device->getFwrVersion()));
+        }
+
+        foreach ($deviceHelpers as $deviceHelper) {
+            $deviceHelper->finishBulk();
         }
     }
 
@@ -92,7 +98,7 @@ class AppUpdateTasmotaFirmwareCommand extends Command
      * @param OutputInterface $output
      * @param                 $language
      *
-     * @throws \Symfony\Component\Console\Exception\ExceptionInterface
+     * @throws ExceptionInterface
      */
     protected function downloadFirmware(OutputInterface $output, $language): void
     {
@@ -108,20 +114,20 @@ class AppUpdateTasmotaFirmwareCommand extends Command
 
         try {
             $command->run($downloadInput, $output);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
         }
     }
 
     /**
      * @required
      *
-     * @param DeviceHelper $deviceHelper
+     * @param DeviceHelperFactory $deviceHelperFactory
      *
      * @return AppUpdateTasmotaFirmwareCommand
      */
-    public function setDeviceHelper(DeviceHelper $deviceHelper): AppUpdateTasmotaFirmwareCommand
+    public function setDeviceHelperFactory(DeviceHelperFactory $deviceHelperFactory): AppUpdateTasmotaFirmwareCommand
     {
-        $this->deviceHelper = $deviceHelper;
+        $this->deviceHelperFactory = $deviceHelperFactory;
 
         return $this;
     }
@@ -150,21 +156,6 @@ class AppUpdateTasmotaFirmwareCommand extends Command
     public function setRouter(UrlGeneratorInterface $router): AppUpdateTasmotaFirmwareCommand
     {
         $this->router = $router;
-
-        return $this;
-    }
-
-    /**
-     * @required
-     *
-     * @param AppDownloadTasmotaFirmwareCommand $appDownloadTasmotaFirmwareCommand
-     *
-     * @return AppUpdateTasmotaFirmwareCommand
-     */
-    public function setAppDownloadTasmotaFirmwareCommand(
-        AppDownloadTasmotaFirmwareCommand $appDownloadTasmotaFirmwareCommand
-    ): AppUpdateTasmotaFirmwareCommand {
-        $this->appDownloadTasmotaFirmwareCommand = $appDownloadTasmotaFirmwareCommand;
 
         return $this;
     }

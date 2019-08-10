@@ -6,6 +6,8 @@ easy_admin:
     entities:
         Device:
             class: App\Entity\Device
+            list:
+                fields: ['id', 'name', 'net_ip_address', 'fwr_version']
             form:
                 fields:
                     - { type: 'tab' , label: 'Allgemeine Informationen', icon: 'user' }

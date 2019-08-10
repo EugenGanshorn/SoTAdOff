@@ -3,9 +3,8 @@
 namespace App\Command;
 
 use App\Repository\DeviceRepository;
-use App\Utils\CommandHelper;
 use App\Utils\DeviceHelper;
-use App\Utils\ProcessManager;
+use App\Utils\DeviceHelperFactory;
 use Psr\Log\LoggerAwareInterface;
 use Psr\Log\LoggerAwareTrait;
 use Symfony\Component\Console\Command\Command;
@@ -21,24 +20,14 @@ class AppGetTasmotaStatusCommand extends Command implements LoggerAwareInterface
     protected static $defaultName = 'app:get-tasmota-status';
 
     /**
-     * @var DeviceHelper
+     * @var DeviceHelperFactory
      */
-    protected $deviceHelper;
+    protected $deviceHelperFactory;
 
     /**
      * @var DeviceRepository
      */
     protected $deviceRespository;
-
-    /**
-     * @var ProcessManager
-     */
-    protected $processManager;
-
-    /**
-     * @var CommandHelper
-     */
-    protected $commandHelper;
 
     protected function configure()
     {
@@ -59,28 +48,30 @@ class AppGetTasmotaStatusCommand extends Command implements LoggerAwareInterface
             $devices = $this->deviceRespository->findAll();
         }
 
-        $this->deviceHelper->startBulk();
-
+        $deviceHelpers = [];
         foreach ($devices as $device) {
-            $deviceHelper = clone $this->deviceHelper;
+            $deviceHelpers[] = $deviceHelper = $this->deviceHelperFactory->create();
+            $deviceHelper->startBulk();
             $deviceHelper
                 ->setDevice($device)
                 ->updateStatus($input->getOption('timeout'));
         }
 
-        $this->deviceHelper->finishBulk();
+        foreach ($deviceHelpers as $deviceHelper) {
+            $deviceHelper->finishBulk();
+        }
     }
 
     /**
      * @required
      *
-     * @param DeviceHelper $deviceHelper
+     * @param DeviceHelperFactory $deviceHelperFactory
      *
      * @return AppGetTasmotaStatusCommand
      */
-    public function setDeviceHelper(DeviceHelper $deviceHelper): AppGetTasmotaStatusCommand
+    public function setDeviceHelperFactory(DeviceHelperFactory $deviceHelperFactory): AppGetTasmotaStatusCommand
     {
-        $this->deviceHelper = $deviceHelper;
+        $this->deviceHelperFactory = $deviceHelperFactory;
 
         return $this;
     }
@@ -95,20 +86,6 @@ class AppGetTasmotaStatusCommand extends Command implements LoggerAwareInterface
     public function setDeviceRespository(DeviceRepository $deviceRespository): AppGetTasmotaStatusCommand
     {
         $this->deviceRespository = $deviceRespository;
-
-        return $this;
-    }
-
-    /**
-     * @required
-     *
-     * @param CommandHelper $commandHelper
-     *
-     * @return AppGetTasmotaStatusCommand
-     */
-    public function setCommandHelper(CommandHelper $commandHelper): AppGetTasmotaStatusCommand
-    {
-        $this->commandHelper = $commandHelper;
 
         return $this;
     }

@@ -5,12 +5,16 @@ namespace App\Utils;
 use App\Entity\Device;
 use Doctrine\ORM\EntityManagerInterface;
 use GuzzleHttp\Client;
+use Psr\Log\LoggerAwareInterface;
+use Psr\Log\LoggerAwareTrait;
 use Symfony\Component\Serializer\SerializerInterface;
 use TasmotaHttpClient\Request;
 use TasmotaHttpClient\Url;
 
-class DeviceHelper
+class DeviceHelper implements LoggerAwareInterface
 {
+    use LoggerAwareTrait;
+
     /**
      * @var Client
      */
@@ -148,18 +152,19 @@ class DeviceHelper
         $this->request->Upgrade(1);
     }
 
-    public function updateStatus(int $timeout = 5): void
+    public function updateStatus(int $timeout = 5, bool $finishRequest = true): void
     {
         $this->getStatus(['timeout' => $timeout], function (array $status) {
             $this->persistStatus($status);
         });
-        $this->finishRequest();
+
+        $finishRequest && $this->finishRequest();
     }
 
-    public function isExists(int $timeout = 1): bool
+    public function isExists(int $timeout = 5, \Closure $callback = null): bool
     {
         try {
-            $this->getStatus(['timeout' => $timeout]);
+            $this->getStatus(['timeout' => $timeout], $callback);
         } catch (\Exception $e) {
             return false;
         }
@@ -169,8 +174,13 @@ class DeviceHelper
 
     public function doUpgrade(string $otaUrl, int $timeout = 180): bool
     {
+        $this->logger->info('set new ota url: {otaUrl} ...', ['otaUrl' => $otaUrl]);
         $this->setOtaUrl($otaUrl);
+        $this->logger->info('...done');
+
+        $this->logger->info('upgrade...');
         $this->upgrade();
+        $this->logger->info('...sleep for 60sec');
 
         sleep(60);
 
@@ -179,9 +189,14 @@ class DeviceHelper
             usleep(250000);
 
             if ($start + $timeout < microtime(true)) {
+                $this->logger->info('device is not reachable');
                 return false;
             }
+
+            $this->logger->info('is device reachable?');
         } while (!$this->isExists());
+
+        $this->logger->info('yes it is!');
 
         return true;
     }
@@ -200,7 +215,7 @@ class DeviceHelper
             $this->device->setName($parsedStatus['FriendlyName']);
         }
 
-        $this->entityManager->persist($this->device);
+        $this->device = $this->entityManager->merge($this->device);
         $this->entityManager->flush();
     }
 

@@ -4,40 +4,27 @@ namespace App\Command;
 
 use App\Entity\Device;
 use App\Repository\DeviceRepository;
-use App\Utils\CommandHelper;
-use App\Utils\DeviceHelper;
-use App\Utils\ProcessManager;
+use App\Utils\DeviceHelperFactory;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
-use Symfony\Component\Process\Process;
 
 class AppFindTasmotaDevicesCommand extends Command
 {
     protected static $defaultName = 'app:find-tasmota-devices';
 
     /**
-     * @var DeviceHelper
+     * @var DeviceHelperFactory
      */
-    protected $deviceHelper;
+    protected $deviceHelperFactory;
 
     /**
      * @var DeviceRepository
      */
     protected $deviceRespository;
-
-    /**
-     * @var ProcessManager
-     */
-    protected $processManager;
-
-    /**
-     * @var CommandHelper
-     */
-    protected $commandHelper;
 
     protected function configure()
     {
@@ -45,7 +32,7 @@ class AppFindTasmotaDevicesCommand extends Command
             ->setDescription('find all tasmota devices in your local network')
             ->addArgument('from', InputArgument::REQUIRED, 'first ip address')
             ->addArgument('to', InputArgument::REQUIRED, 'last ip address')
-            ->addOption('timeout', 't', InputOption::VALUE_OPTIONAL, 'timeout', 1)
+            ->addOption('timeout', 't', InputOption::VALUE_OPTIONAL, 'timeout', 5)
             ->addOption('ignore-exists', 'i', InputOption::VALUE_OPTIONAL, 'ignore already exists devices', true)
             ->addOption('auto-create', 'c', InputOption::VALUE_OPTIONAL, 'create automatically new founded devices', false)
         ;
@@ -67,19 +54,10 @@ class AppFindTasmotaDevicesCommand extends Command
             unset($toOriginal);
         }
 
-        $createProcesses = false;
-        if ($to - $from > 1) {
-            $createProcesses = true;
-        }
-
+        $deviceHelpers = [];
         $amountNewDevices = 0;
         for ($i = $from; $i <= $to; ++$i) {
             $ipAddress = long2ip($i);
-
-            if ($createProcesses) {
-                $this->startProcess($input, $ipAddress);
-                continue;
-            }
 
             /* @noinspection PhpUndefinedMethodInspection */
             if ($ignoreExists && !empty($this->deviceRespository->findOneByIpAddress($ipAddress))) {
@@ -89,26 +67,29 @@ class AppFindTasmotaDevicesCommand extends Command
 
             $io->note(sprintf('scan %s', $ipAddress));
 
-            $this->deviceHelper->setDevice($this->createNewDevice($ipAddress, $i));
-            $isExists = $this->deviceHelper->isExists($input->getOption('timeout'));
-            if ($isExists) {
+            $deviceHelpers[] = $deviceHelper = $this->deviceHelperFactory->create();
+            $deviceHelper->startBulk();
+            $deviceHelper->setDevice($this->createNewDevice($ipAddress, $i));
+
+            $timeout = $input->getOption('timeout');
+            $deviceHelper->isExists($timeout, function () use ($io, &$amountNewDevices, $ipAddress, $autoCreate, $deviceHelper, $timeout) {
                 $io->success(sprintf('new tasmota device found at %s', $ipAddress));
                 ++$amountNewDevices;
 
                 if ($autoCreate) {
-                    $this->deviceHelper->updateStatus();
+                    $deviceHelper->updateStatus($timeout, false);
                 }
-            }
+            });
         }
 
-        $this->processManager->waitForProcesses();
+        foreach ($deviceHelpers as $deviceHelper) {
+            $deviceHelper->finishBulk();
+        }
 
-        if (!$createProcesses) {
-            if ($amountNewDevices) {
-                $io->success(sprintf('Found %d new devices', $amountNewDevices));
-            } else {
-                $io->error('No new devices found');
-            }
+        if ($amountNewDevices) {
+            $io->success(sprintf('Found %d new devices', $amountNewDevices));
+        } else {
+            $io->error('No new devices found');
         }
     }
 
@@ -130,39 +111,15 @@ class AppFindTasmotaDevicesCommand extends Command
     }
 
     /**
-     * @param InputInterface $input
-     * @param string         $ipAddress
-     *
-     * @return Process
-     */
-    protected function startProcess(InputInterface $input, string $ipAddress): Process
-    {
-        $commandName = $this->getName();
-
-        $newInput = clone $input;
-        $newInput->setArgument('from', $ipAddress);
-        $newInput->setArgument('to', $ipAddress);
-
-        $process = $this->processManager->createNewProcess($this->commandHelper->buildCommand($commandName, $newInput));
-        $process->start(
-            function ($type, $buffer) {
-                echo $buffer;
-            }
-        );
-
-        return $process;
-    }
-
-    /**
      * @required
      *
-     * @param DeviceHelper $deviceHelper
+     * @param DeviceHelperFactory $deviceHelperFactory
      *
      * @return AppFindTasmotaDevicesCommand
      */
-    public function setDeviceHelper(DeviceHelper $deviceHelper): AppFindTasmotaDevicesCommand
+    public function setDeviceHelperFactory(DeviceHelperFactory $deviceHelperFactory): AppFindTasmotaDevicesCommand
     {
-        $this->deviceHelper = $deviceHelper;
+        $this->deviceHelperFactory = $deviceHelperFactory;
 
         return $this;
     }
@@ -177,34 +134,6 @@ class AppFindTasmotaDevicesCommand extends Command
     public function setDeviceRespository(DeviceRepository $deviceRespository): AppFindTasmotaDevicesCommand
     {
         $this->deviceRespository = $deviceRespository;
-
-        return $this;
-    }
-
-    /**
-     * @required
-     *
-     * @param ProcessManager $processManager
-     *
-     * @return AppFindTasmotaDevicesCommand
-     */
-    public function setProcessManager(ProcessManager $processManager): AppFindTasmotaDevicesCommand
-    {
-        $this->processManager = $processManager;
-
-        return $this;
-    }
-
-    /**
-     * @required
-     *
-     * @param CommandHelper $commandHelper
-     *
-     * @return AppFindTasmotaDevicesCommand
-     */
-    public function setCommandHelper(CommandHelper $commandHelper): AppFindTasmotaDevicesCommand
-    {
-        $this->commandHelper = $commandHelper;
 
         return $this;
     }
