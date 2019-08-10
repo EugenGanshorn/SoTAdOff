@@ -10,3 +10,4 @@
 4. `bin/console fos:user:create`
 5. `bin/console fos:user:activate`
 6. `bin/console fos:user:promote` (add ROLE_ADMIN)
+7. Open Webinterface http://10.0.10.1/admin (backend) or http://10.0.10.1/ (frontend)
