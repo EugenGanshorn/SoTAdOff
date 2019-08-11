@@ -63,12 +63,10 @@ class AppUpdateTasmotaFirmwareCommand extends Command
             $this->downloadFirmware($output, $language);
         }
 
-        $deviceHelpers = [];
         foreach ($ipAddresses as $ipAddress) {
             $device = $this->deviceRespository->findOneByIpAddress($ipAddress);
 
-            $deviceHelpers[] = $deviceHelper = $this->deviceHelperFactory->create();
-            $deviceHelper->startBulk();
+            $deviceHelper = $this->deviceHelperFactory->create();
             $deviceHelper->setDevice($device);
 
             foreach (['minimal', $language] as $otaUrl) {
@@ -87,10 +85,6 @@ class AppUpdateTasmotaFirmwareCommand extends Command
             $deviceHelper->updateStatus();
 
             $io->success(sprintf('Successful updated device: %s, new fwr version is %s', $ipAddress, $device->getFwrVersion()));
-        }
-
-        foreach ($deviceHelpers as $deviceHelper) {
-            $deviceHelper->finishBulk();
         }
     }
 
