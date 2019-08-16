@@ -17,6 +17,7 @@ services:
                             # The best practice is to be explicit about your dependencies anyway.
         bind:
             $projectDir: '%kernel.project_dir%'
+            $client: '@eight_points_guzzle.client.tasmota_client'
 
     # makes classes in src/ available to be used as services
     # this creates a service per class whose id is the fully-qualified class name
@@ -30,16 +31,10 @@ services:
         resource: '../src/Controller'
         tags: ['controller.service_arguments']
 
-    # add more service definitions when explicit configuration is needed
-    # please note that last definitions always *replace* previous ones
-
     TasmotaHttpClient\Url:
         autowire: true
 
     TasmotaHttpClient\Request:
-        autowire: true
-
-    GuzzleHttp\Client:
         autowire: true
 
     app.menu_builder:

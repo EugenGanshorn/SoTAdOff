@@ -42,7 +42,7 @@ class Builder implements ContainerAwareInterface
         );
 
         $menu->addChild('Home', ['route' => 'index']);
-        $menu->addChild('Admin', ['route' => 'admin']);
+        $menu->addChild('Admin', ['route' => 'easyadmin']);
 
         return $menu;
     }
