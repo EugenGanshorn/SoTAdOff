@@ -8,7 +8,6 @@ use Psr\Log\LoggerAwareInterface;
 use Psr\Log\LoggerAwareTrait;
 use Symfony\Component\Serializer\SerializerInterface;
 use TasmotaHttpClient\Request;
-use TasmotaHttpClient\Url;
 
 class DeviceHelperFactory implements LoggerAwareInterface
 {
@@ -25,11 +24,6 @@ class DeviceHelperFactory implements LoggerAwareInterface
     protected $request;
 
     /**
-     * @var Url
-     */
-    protected $url;
-
-    /**
      * @var EntityManagerInterface
      */
     protected $entityManager;
@@ -39,7 +33,7 @@ class DeviceHelperFactory implements LoggerAwareInterface
      */
     protected $serializer;
 
-    public function create()
+    public function create(): DeviceHelper
     {
         $deviceHelper = new DeviceHelper();
         $deviceHelper
@@ -47,7 +41,6 @@ class DeviceHelperFactory implements LoggerAwareInterface
             ->setClient($this->client)
             ->setEntityManager($this->entityManager)
             ->setRequest($this->request)
-            ->setUrl($this->url)
             ->setLogger($this->logger)
         ;
 
@@ -78,20 +71,6 @@ class DeviceHelperFactory implements LoggerAwareInterface
     public function setRequest(Request $request): DeviceHelperFactory
     {
         $this->request = $request;
-
-        return $this;
-    }
-
-    /**
-     * @required
-     *
-     * @param Url $url
-     *
-     * @return DeviceHelperFactory
-     */
-    public function setUrl(Url $url): DeviceHelperFactory
-    {
-        $this->url = $url;
 
         return $this;
     }

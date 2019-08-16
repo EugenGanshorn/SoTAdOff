@@ -50,7 +50,6 @@ class DeviceHelperTest extends TestCase
 
         $sut = new DeviceHelper();
         $sut->setDevice($device);
-        $sut->setUrl($url);
         $sut->setRequest($request);
 
         $this->assertEquals(['foo' => 'bar'], $sut->getStatus(['timeout' => 42]));
@@ -100,7 +99,6 @@ class DeviceHelperTest extends TestCase
         $sut->setDevice($device);
         $sut->setEntityManager($this->getMockBuilder(EntityManager::class)->disableOriginalConstructor()->getMock());
         $sut->setSerializer($this->getMockBuilder(SerializerInterface::class)->getMock());
-        $sut->setUrl($url);
         $sut->setRequest($request);
 
         $sut->toggle();

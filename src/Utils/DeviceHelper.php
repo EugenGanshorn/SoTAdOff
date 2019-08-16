@@ -26,11 +26,6 @@ class DeviceHelper implements LoggerAwareInterface
     protected $request;
 
     /**
-     * @var Url
-     */
-    protected $url;
-
-    /**
      * @var EntityManagerInterface
      */
     protected $entityManager;
@@ -219,19 +214,19 @@ class DeviceHelper implements LoggerAwareInterface
         $this->entityManager->flush();
     }
 
-    public function startBulk()
+    public function startBulk(): void
     {
         $this->inBulk = true;
         $this->request->startAsyncRequests();
     }
 
-    public function finishBulk()
+    public function finishBulk(): void
     {
         $this->request->finishAsyncRquests();
         $this->inBulk = false;
     }
 
-    protected function finishRequest()
+    protected function finishRequest(): void
     {
         if (!$this->inBulk) {
             $this->request->finishAsyncRquests();
@@ -314,20 +309,6 @@ class DeviceHelper implements LoggerAwareInterface
     public function setRequest(Request $request): DeviceHelper
     {
         $this->request = $request;
-
-        return $this;
-    }
-
-    /**
-     * @required
-     *
-     * @param Url $url
-     *
-     * @return DeviceHelper
-     */
-    public function setUrl(Url $url): DeviceHelper
-    {
-        $this->url = $url;
 
         return $this;
     }
