@@ -35,6 +35,7 @@
         "symfony/yaml": "^4.3"
     },
     "require-dev": {
+        "easycorp/easy-deploy-bundle": "^1.0",
         "friendsofphp/php-cs-fixer": "^2.12",
         "infection/infection": "dev-master",
         "sensiolabs/security-checker": "^6.0",
